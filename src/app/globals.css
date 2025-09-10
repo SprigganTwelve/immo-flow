@@ -3,24 +3,50 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --navBarHeight: 55px
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+
+body{
+  display: grid;
+  background: #F2ECF8;
+  background: #000;
+  color: white;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "navbar navbar" "aside main";
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+
+.navBar{
+  grid-area: navbar;
+  height: var(--navBarHeight);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.searchBar ::placeholder{
+  background-color: white;
 }
+
+
+aside{
+  gap: 33px;
+  height: 100%;
+  display: flex;
+  grid-area: aside;
+  flex-direction: column;
+  background-color: red;
+  padding: 39px 20px 9px 20px;
+  min-height: calc(100vh - var(--navBarHeight)) ;
+}
+
+.logo-aside{
+  width: 2rem;
+}
+
+.main{
+  grid-area: main;
+}
+
+
+
+
