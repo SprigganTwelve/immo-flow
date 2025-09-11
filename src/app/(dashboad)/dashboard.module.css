@@ -1,4 +1,6 @@
 
+:root{
+}
 
 .container{
     height: 100% ;
@@ -10,6 +12,9 @@
     grid-template-rows: 330px 120px 1fr;
 }
 
+.container div{
+    border-radius: 12px;
+}
 
 .tenants{
       grid-column: 2;
@@ -21,4 +26,39 @@
     justify-content: space-between;
 }
 
+.card{
+    z-index: 0;
+    overflow: hidden;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);  
+}
 
+.card::before{
+    content: '';
+    opacity: 0;
+    width: 400px;
+    height: 400px;
+    z-index: -2;
+    top: var(--y);
+    left: var(--x);
+    position: absolute;
+    transform: translate(-50%, -50%);
+    transition: 0.2s;
+    background: radial-gradient(var(--backlight), transparent, transparent);
+}
+
+.card:hover::before{
+    opacity: 1;
+}
+
+.card::after{
+    top: 2px;
+    z-index: 1;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    content: '';
+    position: absolute;
+    border-radius: 12px ;
+    background: rgba(8, 8, 8, 0.1);  
+}
