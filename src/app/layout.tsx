@@ -10,7 +10,7 @@ import SearchSVGLogo from "@/assets/icons/svg/search-svgrepo-com.svg"
 import BellSVGLogo from "@/assets/icons/svg/bell-svgrepo-com.svg"
 
 import SideBar from "@/ui/sidebar/sideBar"
-import LangToogle from "@/ui/langToggle/langToogle"
+import LangToogle from "@/ui/langToogle/langToogle"
 
 
 

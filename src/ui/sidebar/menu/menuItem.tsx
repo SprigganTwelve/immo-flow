@@ -1,10 +1,18 @@
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import styles from './menu.module.css'
 import clsx from "clsx";
 
+interface MenuProps {
+    text: string;
+    alt: string;
+    onClick: ()=> void;
+    active: boolean;
+    svgIcon: StaticImageData;
+}
 
-const MenuItem = ({
+
+const MenuItem: React.FC<MenuProps> = ({
     text,
     svgIcon,
     alt = "",
