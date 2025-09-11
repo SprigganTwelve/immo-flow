@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -6,14 +7,10 @@ import "./globals.css";
 import Image from "next/image";
 
 import SearchSVGLogo from "@/assets/icons/svg/search-svgrepo-com.svg" 
-import HomeSVGLogo from "@/assets/icons/svg/search-svgrepo-com.svg" 
-import ClientSVGLogo from "@/assets/icons/svg/client-svgrepo-com.svg"
-import PaymentSVGLogo from "@/assets/icons/svg/payment-methods-svgrepo-com.svg"
-import ApartmentSVGLogo from "@/assets/icons/svg/blueprint-svgrepo-com.svg"
-import RentSVGLogo from "@/assets/icons/svg/laptop-rent-svgrepo-com.svg"
-import SettingsSVGLogo from "@/assets/icons/svg/settings-svgrepo-com.svg"
 import BellSVGLogo from "@/assets/icons/svg/bell-svgrepo-com.svg"
 
+import SideBar from "@/ui/sidebar/sideBar"
+import LangToogle from "@/ui/langToggle/langToogle"
 
 
 
@@ -41,6 +38,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="en">
       <body
@@ -48,7 +47,7 @@ export default function RootLayout({
       >
         <nav className=" navBar  flex justify-between items-center bg-[#0c083f]">
           <div className="ml-20 flex text-2xl space-x-30">
-              <h1 className="tracking-widest">DashBoard</h1>
+              <h1 className="tracking-widest font-bold text-3xl">DASHBOARD</h1>
               <div className=" relative flex justify-start items-center w-[400px] ">
                   <input 
                       type="text" 
@@ -69,30 +68,12 @@ export default function RootLayout({
           </div>
 
           <div className="flex items-center space-x-7 mr-9">
-                <div 
-                  className="relative h-7  w-18 pt-[2px] pb-[2px] rounded-[6px]  bg-[#564A94]  overflow-hidden "
-                >
-                  <div className={
-                    `
-                      absolute left-0 top-0 rounded-[4px] w-9 h-full bg-[#27254C] transition-discrete
-                      translate-x-[100%]
-                    `
-                  }/>
-                  <span className="absolute translate-x-[69%] left-0 cursor-pointer">Fr</span>
-                  <span className="absolute translate-x-[-19%] right-0 cursor-pointer">Eng</span>
-                </div>
+                <LangToogle />
                 <Image src={BellSVGLogo} alt="Bell" className="w-6 h-6 cursor-pointer" />
                 <Image src="/images/profil.png" width={40} height={40} alt="profile" className="cursor-pointer rounded-3xl"/>
           </div>
         </nav>
-        <aside className="sideBar">
-            <Image src={HomeSVGLogo} alt="Home" className="logo-aside"/>
-            <Image src={ClientSVGLogo} alt="Clients" className="logo-aside"/>
-            <Image src={PaymentSVGLogo} alt="Payment" className="logo-aside"/>
-            <Image src={ApartmentSVGLogo} alt="Apartment" className="logo-aside"/>
-            <Image src={RentSVGLogo} alt="Rent" className="logo-aside" />
-            <Image src={SettingsSVGLogo} alt="Settings" className="logo-aside" />
-        </aside>
+        <SideBar />
         <main className="main">
           {children}
         </main>

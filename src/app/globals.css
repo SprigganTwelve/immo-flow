@@ -3,19 +3,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --navBarHeight: 55px
+  --navBarHeight: 60px
 }
 
 
 
 body{
   display: grid;
-  background: #F2ECF8;
-  background: #000;
   color: white;
+  background: linear-gradient(300deg, #392072, #221842)
+           ;
   grid-template-columns: auto 1fr;
   grid-template-areas: "navbar navbar" "aside main";
 }
+
 
 
 .navBar{
@@ -23,25 +24,26 @@ body{
   height: var(--navBarHeight);
 }
 
+
+
 .searchBar ::placeholder{
   background-color: white;
 }
 
 
+
 aside{
-  gap: 33px;
-  height: 100%;
+  position: relative;
   display: flex;
   grid-area: aside;
   flex-direction: column;
-  background-color: red;
-  padding: 39px 20px 9px 20px;
+  align-items: center;
+  background-color: rgba(12,15,70,255);
   min-height: calc(100vh - var(--navBarHeight)) ;
 }
 
-.logo-aside{
-  width: 2rem;
-}
+
+
 
 .main{
   grid-area: main;
