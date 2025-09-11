@@ -1,1 +1,24 @@
 
+
+.container{
+    height: 100% ;
+    display: grid;
+    padding: 2rem;
+    row-gap: 10px;
+    column-gap: 12px;
+    grid-template-columns: 70% 1fr;
+    grid-template-rows: 330px 120px 1fr;
+}
+
+
+.tenants{
+      grid-column: 2;
+      grid-row: 1 / -1; 
+}
+
+.detailContainer{
+    display: flex;
+    justify-content: space-between;
+}
+
+

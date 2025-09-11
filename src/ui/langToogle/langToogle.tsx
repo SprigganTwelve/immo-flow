@@ -15,9 +15,9 @@ const LangToggle = () => {
             <div className={
                 clsx(
                     `
-                        absolute left-0 top-0 rounded-[4px] w-9 h-full bg-[#27254C] transition-discrete 
+                        absolute left-0 top-0 rounded-[4px] w-9 h-full bg-[#27254C] transition-discrete  
                     `,
-                    lang === 'Eng' ? "translate-x-[100%]" : "translate-x-[0%]"
+                    lang === 'Eng' ? "translate-x-[100%] " : "translate-x-[0%]"
                 )
             }/>
             <span
@@ -28,7 +28,7 @@ const LangToggle = () => {
             </span>
             <span 
                 onClick={()=> setLang('Eng')}
-                className="absolute translate-x-[-19%] right-0 cursor-pointer font-medium"
+                className="absolute translate-x-[-19%] right-0 cursor-pointer font-medium "
             >
                 Eng
             </span>
