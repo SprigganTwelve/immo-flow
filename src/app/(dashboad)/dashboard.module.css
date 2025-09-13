@@ -16,15 +16,28 @@
     border-radius: 12px;
 }
 
+
+
+.lineChartContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .tenants{
       grid-column: 2;
       grid-row: 1 / -1; 
 }
 
+
+
 .detailContainer{
     display: flex;
     justify-content: space-between;
 }
+
+
 
 .card{
     z-index: 0;
@@ -34,6 +47,7 @@
     cursor: pointer;
     background: rgba(255, 255, 255, 0.1);  
 }
+
 
 .card::before{
     content: '';
@@ -49,9 +63,13 @@
     background: radial-gradient(var(--backlight), transparent, transparent);
 }
 
+
+
 .card:hover::before{
     opacity: 1;
 }
+
+
 
 .card::after{
     top: 2px;

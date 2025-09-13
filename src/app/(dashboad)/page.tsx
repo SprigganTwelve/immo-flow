@@ -41,7 +41,7 @@ export default function Home() {
     <div className={styles.container}>
       
         <div
-            className="glassEffect curves"
+            className="glassEffect p-4 "
         >
               <LineChart />
         </div>
