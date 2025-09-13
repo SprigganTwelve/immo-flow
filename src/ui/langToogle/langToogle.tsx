@@ -10,7 +10,7 @@ const LangToggle = () => {
 
     return ( 
         <div 
-            className="relative h-7  w-18 pt-[2px] pb-[2px] rounded-[6px]  bg-[#564A94]  overflow-hidden "
+            className="relative h-7  w-18 pt-[2px] pb-[2px] rounded-[6px]  bg-[#564A94] overflow-hidden "
         >
             <div className={
                 clsx(
@@ -22,7 +22,7 @@ const LangToggle = () => {
             }/>
             <span
                 onClick={()=> setLang('Fr')}
-                className="absolute translate-x-[69%] left-0 cursor-pointer font-medium"
+                className="absolute translate-x-[69%] left-0 font-medium  cursor-pointer"
             >
                 Fr
             </span>

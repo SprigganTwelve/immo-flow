@@ -28,8 +28,10 @@
 
 .card{
     z-index: 0;
+    width: 24%;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
     background: rgba(255, 255, 255, 0.1);  
 }
 
