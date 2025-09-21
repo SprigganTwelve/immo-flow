@@ -3,14 +3,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-
-import Image from "next/image";
-
-import SearchSVGLogo from "@/assets/icons/svg/search-svgrepo-com.svg" 
-import BellSVGLogo from "@/assets/icons/svg/bell-svgrepo-com.svg"
-
+import NavBar from "@/ui/navBar/navBar";
 import SideBar from "@/ui/sidebar/sideBar"
-import LangToogle from "@/ui/langToogle/langToogle"
+import AppContextProvider from "@/contexts/AppContextProvider";
 
 
 
@@ -47,38 +42,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav className=" navBar  flex justify-between items-center bg-[#0c083f]">
-          <div className="ml-20 flex text-2xl space-x-30">
-              <h1 className="tracking-widest font-bold text-3xl">DASHBOARD</h1>
-              <div className=" relative flex justify-start items-center w-[400px] ">
-                  <input 
-                      type="text" 
-                      placeholder="Search here ..." 
-                      className={
-                        `
-                          glassEffect bg-[#0c083f]
-                          border-1 outline-none rounded-[5px] text-base pt-[3px] pr-[45px] pb-[3px] pl-[20px] w-full
-                        `
-                      }
-                  />
-                  <Image 
-                      src={SearchSVGLogo}
-                      alt="Search "
-                      className="absolute r w-6 h-6  right-2 cursor-pointer"
-                  />
-              </div>
-          </div>
-
-          <div className="flex items-center space-x-7 mr-9">
-                <LangToogle />
-                <Image src={BellSVGLogo} alt="Bell" className="w-6 h-6 cursor-pointer" />
-                <Image src="/images/profil.png" width={40} height={40} alt="profile" className="cursor-pointer rounded-3xl"/>
-          </div>
-        </nav>
-        <SideBar />
-        <main className="main">
-          {children}
-        </main>
+        <AppContextProvider>
+          <NavBar />
+          <SideBar />
+          <main className="main">
+            {children}
+          </main>
+        </AppContextProvider>
       </body>
     </html>
   );

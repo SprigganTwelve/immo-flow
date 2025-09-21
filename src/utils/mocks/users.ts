@@ -1,0 +1,31 @@
+
+
+
+export const users = [
+  { name: "Boris Du Bois", image: "https://randomuser.me/api/portraits/men/32.jpg", unpaid: 17200, date: new Date("2025-04-10") },
+  { name: "Claire Martin", image: "https://randomuser.me/api/portraits/women/44.jpg", unpaid: 8200, date: new Date("2025-03-22") },
+  { name: "Ahmed Benali", image: "https://randomuser.me/api/portraits/men/56.jpg", unpaid: 15400, date: new Date("2025-02-15") },
+  { name: "Sophie Lambert", image: "https://randomuser.me/api/portraits/women/12.jpg", unpaid: 3000, date: new Date("2025-01-30") },
+  { name: "Lucas Dupont", image: "https://randomuser.me/api/portraits/men/78.jpg", unpaid: 9200, date: new Date("2025-04-05") },
+  { name: "Emma Rousseau", image: "https://randomuser.me/api/portraits/women/65.jpg", unpaid: 11500, date: new Date("2025-03-28") },
+  { name: "Julien Moreau", image: "https://randomuser.me/api/portraits/men/90.jpg", unpaid: 6700, date: new Date("2025-02-12") },
+  { name: "Anaïs Petit", image: "https://randomuser.me/api/portraits/women/21.jpg", unpaid: 4300, date: new Date("2025-01-18") },
+  { name: "Hugo Lefevre", image: "https://randomuser.me/api/portraits/men/11.jpg", unpaid: 15800, date: new Date("2025-03-05") },
+  { name: "Laura Garnier", image: "https://randomuser.me/api/portraits/women/36.jpg", unpaid: 9200, date: new Date("2025-02-25") },
+  { name: "Antoine Dubois", image: "https://randomuser.me/api/portraits/men/47.jpg", unpaid: 13400, date: new Date("2025-03-12") },
+  { name: "Julie Caron", image: "https://randomuser.me/api/portraits/women/55.jpg", unpaid: 5600, date: new Date("2025-01-28") },
+  { name: "Romain Perrin", image: "https://randomuser.me/api/portraits/men/63.jpg", unpaid: 7200, date: new Date("2025-04-02") },
+  { name: "Camille Vidal", image: "https://randomuser.me/api/portraits/women/23.jpg", unpaid: 8400, date: new Date("2025-03-18") },
+  { name: "Nicolas Blanc", image: "https://randomuser.me/api/portraits/men/7.jpg", unpaid: 15000, date: new Date("2025-02-08") },
+  { name: "Chloé Fontaine", image: "https://randomuser.me/api/portraits/women/14.jpg", unpaid: 4900, date: new Date("2025-01-12") },
+  { name: "Maxime Girard", image: "https://randomuser.me/api/portraits/men/19.jpg", unpaid: 11100, date: new Date("2025-04-08") },
+  { name: "Élodie Rousse", image: "https://randomuser.me/api/portraits/women/31.jpg", unpaid: 6300, date: new Date("2025-03-07") },
+  { name: "Vincent Roy", image: "https://randomuser.me/api/portraits/men/29.jpg", unpaid: 13700, date: new Date("2025-02-20") },
+  { name: "Sarah Noël", image: "https://randomuser.me/api/portraits/women/5.jpg", unpaid: 2700, date: new Date("2025-01-22") },
+  { name: "Thomas Leroy", image: "https://randomuser.me/api/portraits/men/40.jpg", unpaid: 9400, date: new Date("2025-03-30") },
+  { name: "Isabelle Dupuy", image: "https://randomuser.me/api/portraits/women/39.jpg", unpaid: 5100, date: new Date("2025-02-05") },
+  { name: "Bastien Clément", image: "https://randomuser.me/api/portraits/men/52.jpg", unpaid: 12300, date: new Date("2025-04-12") },
+  { name: "Léa Mercier", image: "https://randomuser.me/api/portraits/women/27.jpg", unpaid: 7600, date: new Date("2025-03-15") },
+  { name: "Adrien Charpentier", image: "https://randomuser.me/api/portraits/men/34.jpg", unpaid: 8800, date: new Date("2025-02-28") },
+  { name: "Manon Lemoine", image: "https://randomuser.me/api/portraits/women/8.jpg", unpaid: 4300, date: new Date("2025-01-25") },
+];

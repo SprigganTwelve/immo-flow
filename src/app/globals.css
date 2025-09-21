@@ -13,7 +13,7 @@ body{
   padding: 0;
   display: grid;
   color: white;
-  background: linear-gradient(300deg, #392072, #221842);
+  /* background: linear-gradient(300deg, #392072, #221842); */
   grid-template-columns: auto 1fr;
   grid-template-areas: "navbar navbar" "aside main";
 }

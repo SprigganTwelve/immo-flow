@@ -2,15 +2,18 @@
 :root{
 }
 
+
 .container{
-    height: 100% ;
+    height: 100vh ;
     display: grid;
     padding: 2rem;
     row-gap: 10px;
     column-gap: 12px;
     grid-template-columns: 70% 1fr;
-    grid-template-rows: 330px 120px 1fr;
+    grid-template-rows: 3fr 1fr 2fr;
 }
+
+
 
 .container div{
     border-radius: 12px;
@@ -19,17 +22,69 @@
 
 
 .lineChartContainer{
+    position: relative;
+}
+
+
+
+.lineChartContainer .curvesTitle {
+    top: 5px;
+    right: 18px;
+    opacity: .8;
+    font-size: 26px;
+    cursor: pointer;
+    font-weight: bold;
+    position: absolute;
+}
+
+
+
+.tenantsConatiner{
+    gap: 20px;
     display: flex;
-    justify-content: center;
+    height: 100%;
+    overflow-y: auto;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    flex-direction: column;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* background: #222121; */
+}
+
+
+.tenantsConatiner::-webkit-scrollbar{
+    display: none;
+}
+
+
+
+.tenantsConatiner .tenantsItems{
+    gap: 20px;
+    display: flex;
+    cursor: pointer;
+    padding: 10px 40px;
     align-items: center;
 }
 
-
-.tenants{
-      grid-column: 2;
-      grid-row: 1 / -1; 
+.tenantsConatiner .tenantsItems div {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
+.tenantsConatiner .tenantsItems div > .tenantsNames {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+
+.tenantsConatiner .tenantsItems div > .gauge {
+    height: 10px;
+    width: 100%;
+    border-radius: 20px;
+}
 
 
 .detailContainer{

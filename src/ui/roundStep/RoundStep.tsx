@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import styles from '@/ui/roundStep/roundStep.module.css'
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 
 interface RoundedStepProps {
@@ -29,12 +29,13 @@ const RoundStep: React.FC<RoundedStepProps> = ({
       className,
 }) => {
 
+      const shouldWrapperStyleBeRemoved = useRef(false) 
       const progressorSize = svgSize ? svgSize : 100;
 
       const strokeWidth = 3;
       const r = (progressorSize / 2) - strokeWidth / 2;
-
       const backlight = (style as any)?.["--backlight"] as string | undefined;
+
 
       const formatPercent = useCallback((num: number)=>{
             let rounded = Math.round(num * 100) / 100
@@ -42,6 +43,7 @@ const RoundStep: React.FC<RoundedStepProps> = ({
             if(Number.isInteger(rounded)){
                   return rounded;
             }
+            
 
             let str = rounded.toFixed(2)
 
@@ -52,18 +54,23 @@ const RoundStep: React.FC<RoundedStepProps> = ({
             if(str.endsWith(".00")){
                   str = str.slice(0, -3)
             }
+
+
             return str;
       },[])
+
+
+
 
       return (
             <div
                   id={id}
                   ref={setRef}
                   style={style}
-                  className={clsx(styles.container, "glassEffect", className)}
+                  className={ clsx(styles.container, "glassEffect", className) }
             >
                   <div style={{height: progressorSize, width: progressorSize}} className={styles.svgContainer}>
-                        <div className={styles.wrapper} style={{ ["--angle" as any] : `${ percent ? 360 * percent : 360 }deg` }}></div>
+                        <div className={ styles.wrapper  } style={{ ["--angle" as any] : `${ percent ? 360 * percent : 360 }deg` }} />
                         <svg 
                               width={progressorSize} height={progressorSize } 
                               viewBox={`0 0 ${progressorSize} ${progressorSize}`} className={styles.svg}
