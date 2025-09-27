@@ -1,20 +1,24 @@
 "use client";
 
-import HomeSVGLogo from "@/assets/icons/svg/home-svgrepo-com.svg" 
-import ClientSVGLogo from "@/assets/icons/svg/client-svgrepo-com.svg"
-import PaymentSVGLogo from "@/assets/icons/svg/payment-methods-svgrepo-com.svg"
-import ApartmentSVGLogo from "@/assets/icons/svg/blueprint-svgrepo-com.svg"
-import RentSVGLogo from "@/assets/icons/svg/rent-house-svgrepo-com.svg"
-import SettingsSVGLogo from "@/assets/icons/svg/settings-svgrepo-com.svg"
+import HomeSVGLogo from "@/assets/icons/svg/white/home-svgrepo-com.svg" 
+import ClientSVGLogo from "@/assets/icons/svg/white/client-svgrepo-com.svg"
+import PaymentSVGLogo from "@/assets/icons/svg/white/payment-methods-svgrepo-com.svg"
+import ApartmentSVGLogo from "@/assets/icons/svg/white/blueprint-svgrepo-com.svg"
+import RentSVGLogo from "@/assets/icons/svg/white/rent-house-svgrepo-com.svg"
+import SettingsSVGLogo from "@/assets/icons/svg/white/settings-svgrepo-com.svg"
 
 import MenuItem from "@/ui/sidebar/menu/menuItem"
 import { useState } from "react"
+import { useAppContext } from "@/contexts/AppContextProvider";
 
 
 const SideBar = () => {
+
+    const { AppTheme } = useAppContext()
     const [activeMenu, setActiveMenu] = useState("dashboard");
+
     return ( 
-        <aside>
+        <aside style={{ background: AppTheme.ASIDEBACKGROUND }}>
             <MenuItem 
                 text="Dashboard"
                 svgIcon={HomeSVGLogo} alt="icon"

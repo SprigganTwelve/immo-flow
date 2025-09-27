@@ -2,17 +2,16 @@
 
 import Image from "next/image";
 
-import SearchSVGLogo from "@/assets/icons/svg/search-svgrepo-com.svg" 
-import BellSVGLogo from "@/assets/icons/svg/bell-svgrepo-com.svg"
+import SearchSVGLogo from "@/assets/icons/svg/white/search-svgrepo-com.svg" 
+import BellSVGLogo from "@/assets/icons/svg/white/bell-svgrepo-com.svg"
 
 import LangToogle from "@/ui/langToogle/langToogle"
-import { useContext } from "react";
-import { AppContext } from "@/contexts/AppContextProvider";
+import {  useAppContext } from "@/contexts/AppContextProvider";
 
 
 const NavBar = () => {
     
-    const { AppTheme } = useContext(AppContext)
+    const { AppTheme } = useAppContext()
 
     return ( 
         <nav className=" navBar  flex justify-between items-center" style={{ background: AppTheme.NAVBARBACKGROUND }}>

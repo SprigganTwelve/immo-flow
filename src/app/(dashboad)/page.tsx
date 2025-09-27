@@ -9,7 +9,7 @@ import RoundStep from "@/ui/roundStep/RoundStep";
 import LineChart from "@/ui/charts/lineChart/lineChart"
 
 import { dataset } from "@/utils/mocks/charts";
-import { AppContext } from "@/contexts/AppContextProvider";
+import {  useAppContext } from "@/contexts/AppContextProvider";
 import BarChart from "@/ui/charts/barChart/barChart";
 import { users } from "@/utils/mocks/users";
 import Image from "next/image";
@@ -21,7 +21,7 @@ export default function Home() {
 
 
   const cardRefs = useRef<HTMLDivElement[]>([]);
-  const { AppTheme } = useContext(AppContext)
+  const { AppTheme } = useAppContext()
 
   const detailsInfo = useRef([
     { color: "green" , text: "Gain", percent: 0.42 },
@@ -51,21 +51,23 @@ export default function Home() {
   return (
     <div className={styles.container} style={{ background: AppTheme.PLAINBACKGROUND }}>
         <div
-            style={{ background: AppTheme.CURVEBACKGROUND }}
+            style={{ background: AppTheme.CURVE.background }}
             className= {clsx("glassEffect p-4 ", styles.lineChartContainer)}
             
         >
             {/* <h1 className={styles.curvesTitle}>Tenants' payment status</h1> */}
-              <LineChart
-                    dataset={dataset}
-                    margin={ {  top: 40, right: 10, bottom: 10, left: 30 } }
-              />
+            <div style={{width: "85%", height: "90%"}}>
+                <LineChart
+                      dataset={dataset}
+                      margin={ {  top: 40, right: 10, bottom: 10, left: 30 } }
+                />
+            </div>
         </div>
 
         <div className={clsx(styles.tenantsConatiner, "glassEffect")}>
             {
-              users.map((user)=> (
-                <div className={clsx(styles.tenantsItems)}>
+              users.map((user, index)=> (
+                <div key={index} className={clsx(styles.tenantsItems, "")}>
                    <Image
                         className="rounded-[100%]"
                         width={80} height={80} src={user.image} alt=""
@@ -73,8 +75,7 @@ export default function Home() {
                     <div>
                       <span className={styles.tenantsNames}>{user.name}</span>
                       <div>
-                            <div className={clsx(styles.gauge,"glassEffect")}/>
-                            <span>{user.date.toLocaleDateString("en-US",{ weekday: "long", year: "numeric", day:"numeric", month:"long"})}</span>
+                            <span>{user.date.toLocaleDateString("en-US",{  year: "numeric",  month:"long", weekday: "long", day:"numeric" })}</span>
                       </div>
                     </div>
                 </div>

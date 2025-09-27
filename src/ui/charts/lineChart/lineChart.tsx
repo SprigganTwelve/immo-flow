@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import styles from "./lineChart.module.css";
+import { useAppContext } from "@/contexts/AppContextProvider";
 
 
 
@@ -28,6 +29,7 @@ const LineChart : React.FC<LineChartPops> = ({
     dataset
 }) => {
             
+        const { AppTheme } = useAppContext()
         const divContainer = useRef<HTMLDivElement>(null);
 
         const today = new Date();
@@ -49,13 +51,16 @@ const LineChart : React.FC<LineChartPops> = ({
 
             const xScale = d3
                 .scaleTime()
-                .domain([dataset.dates[0], dataset.dates[dataset.dates.length - 1]])
+                .domain([
+                    new Date(today.getFullYear(), 0, 1), 
+                    new Date(today.getFullYear() + 1 , 0, 7)
+                ])
                 .range([margin.left, width - margin.right]);
 
 
             const yScale = d3
                 .scaleLinear()
-                .domain([0, dataset.maximumPrice])
+                .domain([0, dataset.maximumPrice ])
                 .range([height - margin.bottom, margin.top]);
 
             // axes
@@ -72,6 +77,9 @@ const LineChart : React.FC<LineChartPops> = ({
                 .ticks(5)
                 .tickSizeOuter(0)
                 .tickFormat((d) => `${((d as number) / 1000).toLocaleString()}k`);
+            
+            
+
 
             svg
                 .append("g")
@@ -89,7 +97,9 @@ const LineChart : React.FC<LineChartPops> = ({
                 .attr("fill", "#f8fafc")
                 .style("font-size", "12px");
 
-            svg.selectAll(".domain, .tick line").attr("stroke", "#475569");
+            svg.selectAll(".domain, .tick line").attr("stroke", AppTheme.CURVE.axes );
+            svg.selectAll(".tick").filter( t => t === 0 ).remove()
+
 
             // line generators
 

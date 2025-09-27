@@ -4,7 +4,7 @@ const today = new Date();
 
 export  const dataset = {
             dates: [
-            new Date(today.getFullYear(), 0, 5),
+            new Date(today.getFullYear(), 0, 1),
             new Date(today.getFullYear(), 0, 15),
             new Date(today.getFullYear(), 1, 2),
             new Date(today.getFullYear(), 2, 4),

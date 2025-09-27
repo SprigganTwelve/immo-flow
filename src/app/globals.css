@@ -8,16 +8,16 @@
 
 
 
+
+
 body{
   margin: 0;
   padding: 0;
   display: grid;
-  color: white;
   /* background: linear-gradient(300deg, #392072, #221842); */
   grid-template-columns: auto 1fr;
   grid-template-areas: "navbar navbar" "aside main";
 }
-
 
 
 .navBar{
@@ -39,7 +39,6 @@ aside{
   grid-area: aside;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(12,15,70,255);
   min-height: calc(100vh - var(--navBarHeight)) ;
 }
 
