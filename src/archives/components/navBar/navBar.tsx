@@ -5,7 +5,7 @@ import Image from "next/image";
 import SearchSVGLogo from "@/assets/icons/svg/white/search-svgrepo-com.svg" 
 import BellSVGLogo from "@/assets/icons/svg/white/bell-svgrepo-com.svg"
 
-import LangToogle from "@/ui/langToogle/langToogle"
+import LangToogle from "@/archives/components/langToogle/langToogle"
 import {  useAppContext } from "@/contexts/AppContextProvider";
 
 

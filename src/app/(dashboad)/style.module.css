@@ -1,0 +1,410 @@
+
+.container{
+    z-index: 15;
+    height: 100%;
+}
+
+.container > div {
+    gap: 20px;
+    height: 100%;
+    height: 100%;
+    display: flex;
+    /* background-color: aliceblue; */
+}
+
+
+/* Left container */
+
+.container .left{
+    gap: 8px;
+    height: 100%;
+    padding: 0 0;
+    display:  flex;
+    width: fit-content;
+    position: relative;
+    flex-direction: column;
+}
+
+    /* 
+        circular progressor box and text
+    */
+
+.container .left .flowMetrics{
+    gap: 4px;
+    display: grid;
+    grid-template-columns:  270px 270px;
+    /* grid-template-columns:  300px 300px; */
+}
+
+
+.container .left .flowMetrics .InsightBox{
+    gap: 26px;
+    padding: 20px;
+    display: flex;
+    outline: none;
+    border-radius: 20px;
+    align-items: center;
+    background-color: var(--app-background);
+}
+
+
+.container .left .flowMetrics  .statTxtBox{
+    position: relative;
+    /* color: var(--signal-text-color);
+    filter: brightness(1.6) contrast(120%) saturate(150%); */
+}
+
+
+.container .left .flowMetrics  .statTxtBox > span{  /*price*/
+    font-weight: bold;
+}
+
+
+.container .left .flowMetrics .statTxtBox > div{
+    gap: 7px;
+    left: 12px;
+    display: flex;
+    bottom: -25px;
+    font-size: 13px;
+    position: absolute;
+    align-items: center;
+}
+
+
+
+.container .left .flowMetrics .statTxtBox > div > .signalPoint{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    filter: brightness(1.6) contrast(120%) saturate(150%);
+    background-color: var(--signal-text-color);
+    transition: filter 0.3 ease;
+}
+
+
+
+.container .left .flowMetrics .statTxtBox > div > .signalText{
+    color: var(--signal-text-color);
+    filter: brightness(1.6) contrast(120%) saturate(150%);
+}
+
+    /*
+        linechart
+    */
+
+.lineChartContainer{
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    overflow: hidden;
+    position: relative;
+}
+
+.lineChartContainer .lineChart{
+    width: 100vw;
+    height: 100%;
+    position: absolute;
+}
+
+.container .left .curveSettingsIon{
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    position: absolute;
+    transform: translate(50%,-50%);
+}
+
+/* Right container */
+
+
+
+
+.container > div .right{
+    gap: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+.container > div .right .title{
+    width: 100%;
+    padding: 5px 10px;
+    letter-spacing: 1;
+    position: relative;
+}
+
+
+
+.container > div .right .title::before {
+    left: 0;
+    bottom: 0;
+    height: 1.5px;
+    width: 40%;
+    content: " ";
+    border-radius: 40px;
+    position: absolute;
+    background: var(--app-textColor);
+}
+
+
+
+.container > div .right .title::after {
+    top: 0;
+    right: 0;
+    height: 3px;
+    width: 40%;
+    content: " ";
+    opacity: 0.4;
+    border-radius: 40px;
+    position: absolute;
+    background: var(--app-textColor);
+}
+
+
+
+
+.container > div .right .title  {
+    font-size: 35px;            /* from global.css */
+}
+
+
+
+
+.container > div .right .title > p > span:nth-child(1){ /*  frist word of the title  */
+    color: var(--app-textColor);
+}
+
+
+
+
+.container > div .right .title > p > span:last-child{ /* second word of the title */
+    opacity: 0.4;
+    color: var(--app-textColor);
+}
+
+
+
+
+.container > div .right > .optionsSection  {
+    display: flex;
+    padding: 0 10px ;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+
+.container > div .right > .optionsSection > div {
+    position: relative;
+}
+
+
+
+
+.container > div .right > .optionsSection input{
+    border: 0;
+    outline: 0;
+    font-size: 15px;
+    padding: 10px 47px;
+    padding-left: 40px;
+    border-radius: 5px;
+    color: var(--app-textInput-textColor);
+    background-color: var(--app-textInput-background);
+}
+
+
+.container > div .right > .optionsSection input::placeholder{
+    color: var(--app-textInput-placeholderColor);
+}
+
+
+
+
+.container > div .right > .optionsSection .searchIcon{
+    top: 3px;
+    left: 7px;
+    position: absolute;
+}
+
+
+
+.container > div .right > .optionsSection > .icons{     /* Table - mode - icons container */
+    gap: 7px;
+    height: 100%;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+
+
+.container > div .right .tableContainer {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;      
+    scrollbar-width: thin; 
+    max-height: 100%;
+    background-color: var(--app-table-background);
+}
+
+.container > div .right .tableContainer::-webkit-scrollbar {
+    height: 6px; 
+}
+
+.container > div .right table {
+    width: max-content;
+    min-width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    table-layout: fixed;   
+}
+
+
+.container > div .right  table th,
+.container > div .right  table td{
+    position: relative;
+    padding: 15px 10px;
+}
+
+
+
+.container > div .right  table  #selectColumTitle{
+    width: 20px;
+}
+
+
+
+
+.container > div .right table thead th{
+    text-align: start;
+}
+
+.container > div .right  table td div{
+    height: 20px;
+}
+
+.container > div .right  table td:nth-child(1) input[type="checkbox"]{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 15px;
+  height: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid  var(--app-checkbox-borderColor);
+  background-color: var(--app-checkbox-background); 
+}
+
+
+
+.container > div .right  table td:nth-child(1) input[type="checkbox"]:hover {
+  background-color: var(--app-checkbox-hover-background);
+}
+
+
+
+.container > div .right  table td:nth-child(1) input[type="checkbox"]:checked {
+  background-color: var(--app-checkbox-active-background);
+  border-color: var(--app-checkbox-active-background);
+  /* filter: brightness(1.6) contrast(120%) saturate(150%); */
+}
+
+
+/* the check mark ✓ */
+
+
+.container > div .right  table td:nth-child(1)  input[type="checkbox"]:checked::before {
+  content: "✓";
+  top: 50%;
+  left: 50%;
+  font-size: 14px;
+  position: absolute;
+  transform: translate(-50%, -52%);
+  color: var(--app-checkbox-active-color);
+}
+
+/* lines */
+
+.container > div .right table th:not(:first-child)::before{
+    content: "";
+    top: 0;
+    left: 0;
+    width: 1px;
+    /* height: 100%; */
+    height: 400dvh;
+    position: absolute;
+    background-color: rgba(255,255,255,0.15);
+}
+
+
+
+.container > div .right table th{
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+
+
+.container > div .right table td{
+    border-top: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ------------------ */
+/* column fixed width */
+
+.container .right table th:nth-child(2) {  /* image */
+    width: 70px;
+}
+
+
+
+.container .right table th:nth-child(3){   /*  name */
+    width: 220px;
+} 
+
+
+
+.container .right table th:nth-child(4){  /*contact*/
+    min-width: 220px;
+} 
+
+
+.container .right table th:nth-child(5){  /*status*/
+    width: 120px;
+} 
+
+.container .right table th:nth-child(6){  /*status*/
+    min-width: 120px;
+} 
+
+.container .right table th:nth-child(7){  /*status*/
+    min-width: 120px;
+} 
+
+
+
+
+.container .right table th:nth-child(3) span{ /* text break */
+    white-space: nowrap;      
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: inline-block;  
+    max-width: 100%;  
+}
+
+
+
+.container .right table td:nth-child(2) img{
+    width: 60px;
+    height: 60px;
+    border: none;
+    outline: none;
+    border-radius: 60%;
+}

@@ -2,11 +2,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import NavBar from "@/ui/navBar/navBar";
-import SideBar from "@/ui/sidebar/sideBar"
-import AppContextProvider, { useAppContext } from "@/contexts/AppContextProvider";
-import AppWrapper from "@/layout/appWrapper";
 
+import AppContextProvider from "@/contexts/AppContextProvider";
+import AppWrapper from "@/appWrapper/appWrapper";
 
 
 
@@ -23,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactElement;
 }>) {
 
   return (

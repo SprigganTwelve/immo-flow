@@ -1,8 +1,10 @@
 
 
 import clsx from "clsx";
-import styles from '@/ui/roundStep/roundStep.module.css'
+import styles from '@/ui/archives/roundStep/roundStep.module.css'
 import { useCallback, useEffect, useRef } from "react";
+
+
 
 
 interface RoundedStepProps {

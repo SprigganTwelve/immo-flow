@@ -1,10 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState } from "react";
-import styles from "./AppContextProvider.module.css"
-import { AppThemeType } from "@/utils/themes/appThemeType";
-import { AppWhiteTheme } from "@/utils/themes/appWhiteTheme";
-import { AppDarkPurpleTheme } from "@/utils/themes/appDarkPuppleTheme";
+import { AppThemeType, AppDarkTheme } from "@/utils/appThemes";
 
 
 
@@ -13,11 +10,14 @@ interface AppContextPropsValue {
     setAppTheme: React.Dispatch<React.SetStateAction<AppThemeType>>
 }
 
+
+
 export const AppContext = createContext<AppContextPropsValue | null>(null);
+
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 
-    const [ AppTheme, setAppTheme ] = useState<AppThemeType>(AppDarkPurpleTheme);
+    const [ AppTheme, setAppTheme ] = useState<AppThemeType>(AppDarkTheme);
 
     return ( 
         <AppContext.Provider  value={ { AppTheme, setAppTheme } }>
@@ -26,6 +26,7 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     );
 }
 
+
 export const useAppContext = ()=>{
     const context = useContext(AppContext)
     if(!context){
@@ -33,6 +34,7 @@ export const useAppContext = ()=>{
     }
     return context
 }
- 
+
+
 
 export default AppContextProvider;

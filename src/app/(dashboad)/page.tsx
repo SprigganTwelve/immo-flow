@@ -1,113 +1,295 @@
-"use client";
 
+"use client"
+
+import * as d3 from "d3";
 import clsx from "clsx";
-import styles from './dashboard.module.css'
-import { useContext, useEffect, useRef } from "react";
 
-
-import RoundStep from "@/ui/roundStep/RoundStep";
-import LineChart from "@/ui/charts/lineChart/lineChart"
-
-import { dataset } from "@/utils/mocks/charts";
-import {  useAppContext } from "@/contexts/AppContextProvider";
-import BarChart from "@/ui/charts/barChart/barChart";
-import { users } from "@/utils/mocks/users";
 import Image from "next/image";
+import React, {  useEffect, useRef, useState  } from 'react'
+import { useAppContext } from '@/contexts/AppContextProvider'
+
+import { dataset } from '@/utils/mocks/charts'
+import { AppThemeType } from "@/utils/appThemes";
+
+import LineChart, { onChartReadyFuncProps } from '@/ui/charts/lineChart/lineChart'
+import CircularProgressor, { CircularProgressorProps } from '@/ui/progressor/circularProgressor/circularProgressor'
+
+
+import SVGVerticalLayout from "@/assets/icons/svg/white/layout-6-svgrepo-com.svg"
+import SVGTablLayout from "@/assets/icons/svg/white/layout6-svgrepo-com.svg"
+import SVGSearch from "@/assets/icons/svg/white/search-svgrepo-com (1).svg"
+import SettingsSVGLogo from "@/assets/icons/svg/white/settings.svg"
+
+import styles from './style.module.css'
+import { users } from "@/utils/mocks/users";
 
 
 
-
-export default function Home() {
-
-
-  const cardRefs = useRef<HTMLDivElement[]>([]);
-  const { AppTheme } = useAppContext()
-
-  const detailsInfo = useRef([
-    { color: "green" , text: "Gain", percent: 0.42 },
-    { color: "rgba(129, 25, 25, 0.86)" ,  text: "Loss" , percent: 0.365  },
-    { color: "rgba(179, 114, 114, 0.945)", text: "Rent" , percent: 1 },
-    { color: "rgba(111, 57, 212, 0.904)" , text: "Vacancy rate", percent: 0.6565 }
-  ]);
-
-
-  useEffect(() => {
-      cardRefs.current.forEach((card, i) => {
-        card.onmousemove = (e)=>{
-          let x = e.pageX - card.offsetLeft;
-          let y = e.pageY- card.offsetTop;
-          card.style.setProperty('--x', x + 'px');
-          card.style.setProperty('--y', y + 'px');
-        }
-      });
-  }, []);
-
-
-
-  const setCardRef = (index: number) => (el: HTMLDivElement | null) => {
-    if (el) cardRefs.current[index] = el;
-  };
-
-  return (
-    <div className={styles.container} style={{ background: AppTheme.PLAINBACKGROUND }}>
-        <div
-            style={{ background: AppTheme.CURVE.background }}
-            className= {clsx("glassEffect p-4 ", styles.lineChartContainer)}
-            
-        >
-            {/* <h1 className={styles.curvesTitle}>Tenants' payment status</h1> */}
-            <div style={{width: "85%", height: "90%"}}>
-                <LineChart
-                      dataset={dataset}
-                      margin={ {  top: 40, right: 10, bottom: 10, left: 30 } }
-                />
-            </div>
-        </div>
-
-        <div className={clsx(styles.tenantsConatiner, "glassEffect")}>
-            {
-              users.map((user, index)=> (
-                <div key={index} className={clsx(styles.tenantsItems, "")}>
-                   <Image
-                        className="rounded-[100%]"
-                        width={80} height={80} src={user.image} alt=""
-                    />
-                    <div>
-                      <span className={styles.tenantsNames}>{user.name}</span>
-                      <div>
-                            <span>{user.date.toLocaleDateString("en-US",{  year: "numeric",  month:"long", weekday: "long", day:"numeric" })}</span>
-                      </div>
-                    </div>
-                </div>
-              ))
-            }
-        </div>
-
-        <div id="details" className={styles.detailContainer}>
-          {
-            detailsInfo.current.map((item, i )=>(
-              <RoundStep 
-                  key={i}
-                  text={item.text}
-                  percent={ item.percent }
-                  setRef={setCardRef(i) }
-                  className={styles.card } 
-                  style={{["--backlight" as any] : item.color}}
-              />
-            ))
-          }
-        </div>
-
-        <div className="flex justify-between gap-4">
-            <div className=" glassEffect w-full h-full">
-              {/* moyenne des paiement */}
-              <BarChart />
-            </div>
-            <div className=" glassEffect w-full h-full">
-
-            </div>
-        </div>
-
-    </div>
-  );
+interface DashBoardProps{
 }
+
+
+const tickLabelOffsetY = 20
+
+const DashBoard: React.FC<DashBoardProps>  = ({ })=>{
+    
+    const { AppTheme } = useAppContext()
+    const lineChartItems =  useRef<onChartReadyFuncProps | null>(null)            // Retrieve from the line chart component and represents a group composed of the x-axis, dot information, and line charts.
+    const lineChartContainerRef = useRef<HTMLDivElement | null>(null)
+    const [activeTableDisplayMode, setActiveTableDisplayMode] = useState<string>("tbl")
+
+    useEffect(() => {
+        const container = lineChartContainerRef.current;
+        const chatItems = lineChartItems.current;
+        if (!container || !chatItems) return;
+
+        let isDragging = false;
+        let startX = 0;
+        let currentOffset = 0;
+
+        const maxXOffset = Math.max(0, chatItems.divContainer.clientWidth - container.clientWidth );
+
+        currentOffset = -maxXOffset;
+        chatItems.chartsGridX.attr("transform", `translate(${currentOffset}, 0)`);
+
+	    chatItems.yAxisGroup.selectAll('.tick text')
+                            .attr("x", container.clientWidth -10  )
+                            .attr("dy", -5 )
+
+        const handleMouseDown = (e: MouseEvent) => {
+            isDragging = true;
+            startX = e.clientX;
+            document.body.style.userSelect = "none";
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isDragging) return;
+
+            const dx = e.clientX - startX;
+            let newOffset = currentOffset + dx;
+
+            console.log(newOffset)
+            newOffset = Math.max(-maxXOffset, Math.min(0, newOffset));
+
+            chatItems.chartsGridX.attr("transform", `translate(${newOffset + 7.5 }, 0)`);
+        };
+
+        const handleMouseUp = (e: MouseEvent) => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const dx = e.clientX - startX;
+            currentOffset = Math.max(-maxXOffset, Math.min(0, currentOffset + dx));
+
+            document.body.style.userSelect = "";
+        };
+
+        container.addEventListener("mousedown", handleMouseDown);
+        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mouseup", handleMouseUp);
+
+        return () => {
+            container.removeEventListener("mousedown", handleMouseDown);
+            window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("mouseup", handleMouseUp);
+        };
+    }, []);
+
+
+    return(
+        <div 
+            className={styles.container}
+        >
+            <div>
+
+                <div className={styles.left}>
+                    <div className={styles.flowMetrics}>
+                        <FluxPoint 
+                            price='32.1k'
+                            percent={.45}
+                            appTheme={AppTheme}
+                            signalColor='green'
+                            signalText='Approved'
+                        />
+                        <FluxPoint 
+                            price='12.4k'
+                            percent={.25}
+                            appTheme={AppTheme}
+                            signalColor='yellow'
+                            signalText='Pending'
+                        />
+                        <FluxPoint 
+                            price='59.4k'
+                            percent={.79}
+                            appTheme={AppTheme}
+                            signalColor='red'
+                            signalText='Cancel'
+                        />
+                        <FluxPoint 
+                            price='14.87k'
+                            percent={.26}
+                            appTheme={AppTheme}
+                            signalColor='blue'
+                            signalText='Sheduled'
+                        />
+                    </div>
+                    <div
+                        ref={lineChartContainerRef} 
+                        className={styles.lineChartContainer}
+                    >
+                        <div className={styles.lineChart}>
+                            <LineChart
+                                appTheme={AppTheme}
+                                dataset={dataset}
+                                margin={{
+                                    top: 5,  bottom: 25
+                                }}
+                                onChartReady={({divContainer, chartsGridX, svg, xAxisGroup, yAxisGroup})=>{
+                                    lineChartItems.current = {svg, yAxisGroup, xAxisGroup ,chartsGridX, divContainer}
+                                }}
+                            />
+                        </div>
+
+                    </div>
+                    <Image 
+                            alt="settings"
+                            src={SettingsSVGLogo}
+                            height={25} width={25}
+                            className= {clsx("icon-object-properties", styles.curveSettingsIon)}
+                    />
+                </div>
+
+                <div className={styles.right}>
+
+                    <div className={styles.title}>
+                        <p>
+                            <span>Renting</span>&nbsp;
+                            <span>record</span>
+                        </p>
+                    </div>
+
+                    <div className={styles.optionsSection}>
+                        <div>
+                            <input type="text" placeholder="Search"/>
+                            <Image 
+                                    alt="vtl"
+                                    src={SVGSearch}
+                                    height={30} width={30}
+                                    className= {clsx("icon-object-properties", styles.searchIcon)}
+                            />
+                        </div>
+                        <div className={styles.icons}>
+                                <Image 
+                                    alt="vtl"
+                                    height={30} width={30}
+                                    src={SVGVerticalLayout}
+                                    onClick={()=> setActiveTableDisplayMode("vtl")}
+                                    className= {clsx("icon-object-properties", activeTableDisplayMode === "vtl" && "icon-active")}
+                                />
+                                <Image 
+                                    alt="tbl"
+                                    height={30} width={30}
+                                    src={SVGTablLayout}
+                                    onClick={()=> setActiveTableDisplayMode("tbl")}
+                                    className= {clsx("icon-object-properties", activeTableDisplayMode === "tbl" && "icon-active")}
+                                />
+                        </div>
+                    </div>
+
+                   <div className={styles.tableContainer}>
+
+                        <table>
+                            <thead>
+                                    <tr>
+                                        <th 
+                                            id={styles.selectColumTitle}
+                                        />
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>contact</th>
+                                        <th>status</th>
+                                        <th>paid</th>
+                                        <th>unpaid</th>
+                                    </tr>
+                            </thead>
+                            <tbody>
+                                {    users ?
+                                        users.map((user)=>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" />
+                                            </td>
+                                            <td>
+                                                <img className={styles.image} src={user.image} alt="" />
+                                            </td>
+                                            <td>
+                                                <span>{user.name}</span>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        ) : 
+                                        <></>
+                                }
+
+                            </tbody>
+                        </table>
+
+                   </div>
+
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+export default DashBoard
+
+
+
+
+
+
+interface FluxPointProps{
+    price: string;
+    percent: number;
+    signalText: string;
+    signalColor: string;
+    appTheme: AppThemeType;
+    edgeColorSettings?: NonNullable<CircularProgressorProps['edgeSettings']>['color']
+}
+
+const FluxPoint: React.FC<FluxPointProps> = ({appTheme, price, signalColor, signalText, percent, edgeColorSettings}) => {
+    return ( 
+            <div 
+                className={styles.InsightBox}
+                style={{ ["--signal-text-color" as any]: signalColor }}
+            >
+                <CircularProgressor
+                    size={"40px"}
+                    percent={percent}
+                    fontSize={ "15px" }
+                    edgeSettings={{ 
+                        padChord: 1,
+                        length: "10px",
+                        color: edgeColorSettings || { 
+                            active: appTheme.TEXTCOLOR,
+                            innactive: appTheme.SIDEBAR.BACKGROUNDCOLOR
+                        },
+                    }}
+                    containerCssProperties={{ gap: 30 }}
+                />
+                <div className={styles.statTxtBox}>
+                    <span>$ {price}</span>
+                    <div>
+                        <div className={styles.signalPoint}/>
+                            <span className={styles.signalText}>{signalText}</span>
+                        </div>
+                    </div>
+            </div>
+     );
+}
+ 
