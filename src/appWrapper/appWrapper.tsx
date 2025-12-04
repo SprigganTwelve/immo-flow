@@ -40,7 +40,16 @@ const AppWrapper = <P,>({children} : AppWrapperProps<P>) => {
                 color:                            AppTheme.TEXTCOLOR,
                 backgroundColor:                  AppTheme.BACKGROUNDCOLOR,
                 ["--app-textColor" as any] :                  AppTheme.TEXTCOLOR,
+                ["--app-light-textColor" as any ] :           AppTheme.LIGHTTEXTCOLOR,
                 ["--app-background" as any ] :                AppTheme.BACKGROUNDCOLOR,
+                ["--app-neutralColor" as any]:                AppTheme.NEUTRALSOFTCOLOR ?? AppTheme.SIDEBAR.ACTIVE,  
+
+                ["--app-container-primary-color" as any] :    AppTheme.CONTAINER?.PRIMARYCOLOR  || AppTheme.TEXTCOLOR,
+                ["--app-container-secondary-color" as any ] : AppTheme.CONTAINER?.SECONDARYCOLOR || AppTheme.BACKGROUNDCOLOR,
+
+                ["--app-sidebar-background" as any ] :        AppTheme.SIDEBAR.BACKGROUNDCOLOR,
+                ["--app-sidebar-textColor" as any ] :         AppTheme.SIDEBAR.TEXTCOLOR,
+                ["--app-sidebar-active-color" as any ] :      AppTheme.SIDEBAR.ACTIVE?.COLOR ?? "blue",
                 
                 ["--app-active-icon-background" as any ] :    AppTheme.ACTIVEICONBACKGROUNDCOLOR || AppTheme.BACKGROUNDCOLOR,
                 ["--app-textInput-textColor" as any]:         AppTheme.TEXTINPUT?.TEXTCOLOR || "black",
@@ -57,7 +66,7 @@ const AppWrapper = <P,>({children} : AppWrapperProps<P>) => {
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <div className={styles.layout}>
-              <SideBar />
+              <SideBar svgFill="white" />
               <main className={styles.main}>
                 {
                   children

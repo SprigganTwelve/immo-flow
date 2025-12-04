@@ -1,326 +1,733 @@
 
-.container{
-    z-index: 15;
-    height: 100%;
-}
-
-.container > div {
-    gap: 20px;
-    height: 100%;
+/* Container principal */
+.container {
+    gap: 1rem;
     height: 100%;
     display: flex;
-    /* background-color: aliceblue; */
+    margin-left: 5rem;
 }
 
+/* First section */
 
-/* Left container */
 
-.container .left{
-    gap: 8px;
+.firstDivision {
+    gap: 0.8rem;
     height: 100%;
-    padding: 0 0;
-    display:  flex;
-    width: fit-content;
-    position: relative;
-    flex-direction: column;
-}
-
-    /* 
-        circular progressor box and text
-    */
-
-.container .left .flowMetrics{
-    gap: 4px;
-    display: grid;
-    grid-template-columns:  270px 270px;
-    /* grid-template-columns:  300px 300px; */
-}
-
-
-.container .left .flowMetrics .InsightBox{
-    gap: 26px;
-    padding: 20px;
     display: flex;
-    outline: none;
-    border-radius: 20px;
-    align-items: center;
-    background-color: var(--app-background);
-}
-
-
-.container .left .flowMetrics  .statTxtBox{
+    padding: 15px 20px ;
     position: relative;
-    /* color: var(--signal-text-color);
-    filter: brightness(1.6) contrast(120%) saturate(150%); */
-}
-
-
-.container .left .flowMetrics  .statTxtBox > span{  /*price*/
-    font-weight: bold;
-}
-
-
-.container .left .flowMetrics .statTxtBox > div{
-    gap: 7px;
-    left: 12px;
-    display: flex;
-    bottom: -25px;
-    font-size: 13px;
-    position: absolute;
-    align-items: center;
-}
-
-
-
-.container .left .flowMetrics .statTxtBox > div > .signalPoint{
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    filter: brightness(1.6) contrast(120%) saturate(150%);
-    background-color: var(--signal-text-color);
-    transition: filter 0.3 ease;
-}
-
-
-
-.container .left .flowMetrics .statTxtBox > div > .signalText{
-    color: var(--signal-text-color);
-    filter: brightness(1.6) contrast(120%) saturate(150%);
-}
-
-    /*
-        linechart
-    */
-
-.lineChartContainer{
-    width: 100%;
-    height: 100%;
-    cursor: grab;
-    overflow: hidden;
-    position: relative;
-}
-
-.lineChartContainer .lineChart{
-    width: 100vw;
-    height: 100%;
-    position: absolute;
-}
-
-.container .left .curveSettingsIon{
-    top: 0;
-    right: 0;
     cursor: pointer;
-    position: absolute;
-    transform: translate(50%,-50%);
-}
-
-/* Right container */
-
-
-
-
-.container > div .right{
-    gap: 15px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-
-
-
-.container > div .right .title{
-    width: 100%;
-    padding: 5px 10px;
-    letter-spacing: 1;
-    position: relative;
-}
-
-
-
-.container > div .right .title::before {
-    left: 0;
-    bottom: 0;
-    height: 1.5px;
-    width: 40%;
-    content: " ";
-    border-radius: 40px;
-    position: absolute;
-    background: var(--app-textColor);
-}
-
-
-
-.container > div .right .title::after {
-    top: 0;
-    right: 0;
-    height: 3px;
-    width: 40%;
-    content: " ";
-    opacity: 0.4;
-    border-radius: 40px;
-    position: absolute;
-    background: var(--app-textColor);
-}
-
-
-
-
-.container > div .right .title  {
-    font-size: 35px;            /* from global.css */
-}
-
-
-
-
-.container > div .right .title > p > span:nth-child(1){ /*  frist word of the title  */
-    color: var(--app-textColor);
-}
-
-
-
-
-.container > div .right .title > p > span:last-child{ /* second word of the title */
-    opacity: 0.4;
-    color: var(--app-textColor);
-}
-
-
-
-
-.container > div .right > .optionsSection  {
-    display: flex;
-    padding: 0 10px ;
+    overflow-y: auto;
     align-items: center;
-    justify-content: space-between;
+    border-radius: 20px;
+    box-sizing: border-box;
+    flex-direction: column;
+    font-size: var(--fs-normal-title);
+    background-color: var(--app-container-primary-color);
 }
 
 
+.firstDivision::-webkit-scrollbar {
+    height: 0;
+    width: 0;
 
-
-.container > div .right > .optionsSection > div {
-    position: relative;
 }
 
-
-
-
-.container > div .right > .optionsSection input{
+.firstDivision .optionsSection {
     border: 0;
     outline: 0;
-    font-size: 15px;
-    padding: 10px 47px;
-    padding-left: 40px;
-    border-radius: 5px;
-    color: var(--app-textInput-textColor);
-    background-color: var(--app-textInput-background);
-}
-
-
-.container > div .right > .optionsSection input::placeholder{
-    color: var(--app-textInput-placeholderColor);
-}
-
-
-
-
-.container > div .right > .optionsSection .searchIcon{
-    top: 3px;
-    left: 7px;
-    position: absolute;
-}
-
-
-
-.container > div .right > .optionsSection > .icons{     /* Table - mode - icons container */
-    gap: 7px;
-    height: 100%;
+    width: 70%;
+    gap: 1rem;
     display: flex;
-    cursor: pointer;
+    top: 0; 
+    z-index: 10;
+    position: sticky;
+    border-radius: 30px;
+    align-items: center;
+    padding: 0.3rem 1.8rem;
+    justify-content: center;
+    background-color: var(--app-container-secondary-color);
+}
+
+
+.firstDivision .optionsSection  > div{
+    padding: 0.4rem 1rem;
+}
+
+
+.firstDivision .optionsSection  .activate{
+    position: relative;
+    border-radius: 30px;
+    background: var(--app-container-primary-color);
+}
+
+.firstDivision .optionsSection  .activate span{
+    display: inline-block;
+    padding-left: 1rem;
+}
+
+
+
+.firstDivision .optionsSection .activate::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem ;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: none;
+  display: inline-block;
+  -webkit-mask: url(/assets/icons/svg/keys.svg) no-repeat center / contain;
+  mask: url(/assets/icons/svg/keys.svg) no-repeat center / contain;
+  background-color: currentColor; 
+}
+
+
+.firstDivision .itemContainer {
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+
+.firstDivision .itemContainer .itemWrapper {
+    width: 18rem;
+    padding: 5px;
+    position: relative;
+    border-radius: 20px;
+    transition: background-color 2s ease-in,
+                transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 1);
+}
+
+
+
+
+.firstDivision .itemContainer .item {
+    gap: 5px;
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: left 1s cubic-bezier(0.22, 1, 0.36, 1),
+                bottom 1s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+
+    will-change: transform, left, bottom;
+}
+
+
+
+
+.firstDivision .itemContainer .item img {
+    width: 100%;
+    height: 15rem;
+    border-radius: 20px;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+
+
+
+
+.firstDivision .itemContainer .item .locationContainer {
+    gap: 5px;
+    display: flex;
     align-items: center;
 }
 
 
+.firstDivision .itemContainer .item .propertyMetaBar{
+    position: relative;
+}
 
-.container > div .right .tableContainer {
+
+.firstDivision .itemContainer .item .metaGroup{
+    gap: 10px;
+    display: flex;
+    overflow-x: auto;
+    box-sizing: border-box;
+    justify-content: flex-start;
+}
+
+
+.firstDivision .itemContainer .item .metaGroup::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+}
+
+
+.firstDivision .itemContainer .item .metaGroup .tags{
+    border: 0;
+    outline: 0;
+    gap: 0.28rem;
+    display: flex;
+    max-width: 5rem;
+    padding: 4px 12px;
+    align-items: center;
+    height: fit-content;
+    border-radius: 20px;
+    background-color: var(--app-container-secondary-color);
+
+}
+
+.firstDivision .itemContainer .item  .arrowIndicator{
+    top: 50%;
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .2s;
+    transform: translateY(-47%);
+}
+
+.firstDivision .itemContainer .item  .arrowIndicator:hover{
+    opacity: 1;
+    z-index: 10;
+    border-radius: 20px;
+    background: var(--app-container-secondary-color);
+    animation:  bouncePulse 0.7s cubic-bezier(.22, 1.61, .36, 1) forwards;
+}
+
+.firstDivision .itemContainer .item  .arrowIndicator:hover svg{
+    opacity: 1;
+}
+
+@keyframes bouncePulse {
+    0% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+    30% {
+        opacity: 0.85;
+        transform: translateY(-50%) scale(1.2);
+    }
+    60% {
+        opacity: 0.9;
+        transform: translateY(-50%) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+
+.firstDivision .itemContainer .item  .rigthArrowIndicator {
+    right: -20px;
+}
+
+
+.firstDivision .itemContainer .item  .rigthArrowIndicator:hover{
+    transform: rotate(0);
+}
+
+
+.firstDivision .itemContainer .item  .leftArrowIndicator {
+    left: -20px;
+}
+
+
+.firstDivision .itemContainer .item  .leftArrowIndicator svg{
+    transform: rotate(180deg);
+}
+
+
+/* Main section */
+
+
+.main{
+    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.main  .title{
+    font-size: 1.3rem;
+}
+
+/*----main header---*/
+
+.main .header{
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+.main .header .KPIContainer{
+    gap: 0.9rem;
+    display: flex;
+}
+
+.main .header .KPIItem{
+    gap: 0.5rem;
+    display: flex;
+    border-radius: 20px;
+    padding: 1rem 0.6rem;
+    /* cursor: pointer; */
+    flex-direction: column;
+    background: var(--app-container-primary-color);
+}
+
+
+.main .header .KPIItem p{
+    position: relative;
+}
+
+
+
+.main .header .KPIItem .rate{
+    right: 15px;
+    font-size: 13px;
+    position: absolute;
+    color: var(--color);
+    display: inline-block ;
+}
+
+
+.main .header .KPIItem .rate::before{
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: none;
+    display: inline-block;
+    background-color: currentColor; 
+    -webkit-mask: var(--rsc) no-repeat center / contain;
+    mask: var(--rsc) no-repeat center / contain;
+}
+
+
+.main  .KPIItem .lineChart{
+    border: 0;
+    width: 12rem;
+    height: 4rem;
+}
+
+
+
+/*----main complaints---*/
+
+
+.complaintsSection,
+.complaintsCard .metricsWrapper,
+.complaintsCard .metricsWrapper .metricItem,
+.complaintsSection  .insightContainer,
+.complaintsSection  .insightContainer .pieChartSection,
+.complaintsSection  .insightContainer .pieChartSection .details
+{
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.complaintsSection{}
+
+
+
+.complaintsCard .metricsWrapper{
+    flex-direction: row;
+}
+
+
+.complaintsCard .metricsWrapper .metricItem{
+    width: 12rem;
+    position: relative;
+    padding: 1rem 0.6rem;
+    border-radius: 20px;
+}
+.complaintsCard .metricsWrapper .metricItem::before{
+    inset: 0;
+    content: "";
+    z-index: -2;
+    position: absolute;
+    border-radius: inherit;
+    opacity: var(--backgroundOpacity);
+    background: var(--backgroundColor);
+}
+
+
+.complaintsCard .metricsWrapper .metricItem .arrowUpRight{
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    cursor: pointer;
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--app-container-secondary-color);
+}
+
+
+.complaintsCard .metricsWrapper .metricItem .details .rate{
+    padding-right: 2px;
+    color: var(--color);
+}
+
+
+.complaintsCard .metricsWrapper .metricItem .details .rate::before{
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: none;
+    display: inline-block;
+    transform: translateY(5%);
+    background-color: currentColor; 
+    -webkit-mask: var(--rsc) no-repeat center / contain;
+    mask: var(--rsc) no-repeat center / contain;
+}
+
+
+.complaintsSection  .insightContainer{
+    gap: 10PX;
+}
+
+
+.complaintsSection  .insightContainer .title{
+    font-size: 1rem;
+}
+
+
+
+.complaintsSection  .insightContainer .pieChartSection {
+    gap: 0.3rem;
+    align-items: center;
+    flex-direction: row;
+}
+
+.complaintsSection  .insightContainer  .pieChartContainer{
+    width: 12rem;
+    height: var(--height);
+    background-color: var(--app-container-primary-color);
+}
+
+
+
+
+/*----Last content----*/
+
+.lastDivision{
+    width: 22rem;
+    margin-left: auto;
+}
+
+.lastDivision .notificationContainer{
+    height: 60%;
+    position: relative;
+    padding: 1rem 2rem;
+    /* background: var(--app-container-primary-color); */
+}
+
+.lastDivision .notificationContainer::before{
+    top: 0;
+    left: 0;
+    content: "";
+    border: 20px;
+    margin-top: 45px;
+    position: absolute;
+    height: calc(100% - 45px);
+    border-left: 2px solid var(--app-textColor);
+}
+
+
+.lastDivision .notificationContainer .title{  font-size: 1.3rem; }
+
+
+.lastDivision .notificationContainer .itemsWrapper{
+    gap: 2rem;
+    display: flex;
+    margin-top: 2rem;
+    flex-direction: column;
+}
+
+
+.lastDivision .notificationContainer .itemsWrapper .item {
+    gap: 10px;
+    display: flex;
+    position: relative;
+}
+
+.lastDivision .notificationContainer .itemsWrapper .item::before {
+    top: 0;
+    left: 0;
+    width: 15px;
+    content: "";
+    height: 15px;
+    border-radius: 50%;
+    margin-left: -2rem;
+    position: absolute;
+    transform: translate(-50%);
+    background-color: var(--app-textColor);
+}
+
+
+.lastDivision .notificationContainer .itemsWrapper .item img{
+    border: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+}
+
+
+.lastDivision .notificationContainer .itemsWrapper .item .desc{
+    font-size: 14px;
+    font-weight: 800;
+    margin-right: 1rem;
+}
+
+
+
+.lastDivision .notificationContainer .itemsWrapper .item .metaInfo .time::before{
+    content: "";
+    width: 5px;
+    height: 5px;
+    margin-right: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--app-light-textColor);
+}
+
+
+
+.lastDivision .notificationContainer .itemsWrapper .item .optionsVertical {
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    position: absolute;
+    transform: translateY(54%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.7; /* -> transparence */
+}
+
+.lastDivision .notificationContainer .itemsWrapper .item .optionsVertical:hover {
+    transform: translateY(0);
+    opacity: 1; /* -> opaque */
+}
+
+
+
+
+
+/*  special/effect/global class (not specify for one particular item)  */
+
+
+
+
+.breakDisplay{
+    display: none;
+    visibility: hidden;
+}
+
+.disruptingPointerAnimation{
+    pointer-events: none;   
+}
+
+.title {
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+ .littleTitle{
+    font-size: 15px;
+}
+
+
+.lightColor {
+    opacity: 0.65;
+    font-weight: normal;
+    font-size: var(--fs-litte-text);
+    color: var(--app-light-textColor);
+}
+
+
+
+
+/*  Media rules for responsivness */
+
+@media (max-width: 767px){
+    .firstDivision{
+        /* the margin effect of the container on the first division (cause it will clip firstDivision as max-width is going shorter) */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* table container */
+/* .container > div  .tableContainer {           
     width: 100%;
+    height: auto;
+    min-height: 140px;
     overflow-x: auto;
     overflow-y: auto;      
-    scrollbar-width: thin; 
     max-height: 100%;
+    border-radius: 10px;
+    scrollbar-width: thin; 
+    scrollbar-color: #555 #1a1a1a;
+    background-color: var(--app-table-background);
+
+} */
+
+
+
+/* Chrome, Safari, Edge */
+
+/* .tableContainer::-webkit-scrollbar {
+    width: 8px;  
+    height: 8px;   
+} */
+
+/* .tableContainer::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+    
+.tableContainer::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+
+
+
+.container > div  table {
+    min-width: 100%;
+    border-spacing: 0;
+    width: max-content;
+    table-layout: fixed;   
+    position: relative;
+    border-collapse: collapse;
+}
+
+
+.container  table thead {
+    top: 0; 
+    z-index: 2; 
+    opacity: 1;
+    padding: 10px;
+    text-align: left;
+    position: sticky;
     background-color: var(--app-table-background);
 }
 
-.container > div .right .tableContainer::-webkit-scrollbar {
-    height: 6px; 
-}
 
-.container > div .right table {
-    width: max-content;
-    min-width: 100%;
-    border-spacing: 0;
-    border-collapse: collapse;
-    table-layout: fixed;   
-}
-
-
-.container > div .right  table th,
-.container > div .right  table td{
+.container   table th,
+.container   table td{
     position: relative;
-    padding: 15px 10px;
+    padding: 15px 15px;
 }
 
 
-
-.container > div .right  table  #selectColumTitle{
-    width: 20px;
-}
-
-
-
-
-.container > div .right table thead th{
+.container  table thead th{
+    padding: 20px 25px;
     text-align: start;
 }
 
-.container > div .right  table td div{
-    height: 20px;
-}
+.container table thead th div{
+    gap: 15px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+} 
 
-.container > div .right  table td:nth-child(1) input[type="checkbox"]{
+ */
+
+/*  check input  */
+
+
+
+/* .container  table input[type="checkbox"]{
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   border-radius: 5px;
   cursor: pointer;
   position: relative;
   transition: all 0.3s ease;
   border: 2px solid  var(--app-checkbox-borderColor);
   background-color: var(--app-checkbox-background); 
-}
+} */
 
 
 
-.container > div .right  table td:nth-child(1) input[type="checkbox"]:hover {
+
+/* .container  table input[type="checkbox"]:hover {
   background-color: var(--app-checkbox-hover-background);
-}
+} */
 
 
 
-.container > div .right  table td:nth-child(1) input[type="checkbox"]:checked {
+/* .container  table  input[type="checkbox"]:checked {
   background-color: var(--app-checkbox-active-background);
   border-color: var(--app-checkbox-active-background);
-  /* filter: brightness(1.6) contrast(120%) saturate(150%); */
-}
+} */
 
 
 /* the check mark ✓ */
 
 
-.container > div .right  table td:nth-child(1)  input[type="checkbox"]:checked::before {
+/* .container table   input[type="checkbox"]:checked::before {
   content: "✓";
   top: 50%;
   left: 50%;
@@ -328,83 +735,177 @@
   position: absolute;
   transform: translate(-50%, -52%);
   color: var(--app-checkbox-active-color);
-}
+} */
 
 /* lines */
 
-.container > div .right table th:not(:first-child)::before{
+/* .container  table th:not(:first-child)::before{
     content: "";
     top: 0;
     left: 0;
     width: 1px;
-    /* height: 100%; */
-    height: 400dvh;
+    height: 100%;
     position: absolute;
     background-color: rgba(255,255,255,0.15);
-}
+} */
 
 
+/* border color */
 
-.container > div .right table th{
+/* .container  table th{
     border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
 
 
-.container > div .right table td{
+.container table td{
     border-top: 1px solid rgba(255,255,255,0.15);
     border-bottom: 1px solid rgba(255,255,255,0.15);
-}
+} */
+
+
 
 /* ------------------ */
 /* column fixed width */
 
-.container .right table th:nth-child(2) {  /* image */
-    width: 70px;
+ /* cell width */
+/* .container table th:not(:first-child) { 
+    width: 270px;
 }
+ */
+
+/*  cell adjustements */
+
+/* .container table tbody tr td:nth-child(1) div{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
 
 
-
-.container .right table th:nth-child(3){   /*  name */
-    width: 220px;
-} 
-
-
-
-.container .right table th:nth-child(4){  /*contact*/
-    min-width: 220px;
-} 
-
-
-.container .right table th:nth-child(5){  /*status*/
-    width: 120px;
-} 
-
-.container .right table th:nth-child(6){  /*status*/
-    min-width: 120px;
-} 
-
-.container .right table th:nth-child(7){  /*status*/
-    min-width: 120px;
-} 
-
-
-
-
-.container .right table th:nth-child(3) span{ /* text break */
-    white-space: nowrap;      
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    display: inline-block;  
+ /* text break */
+/* .container table span{
+    line-clamp: 1;
     max-width: 100%;  
+    overflow: hidden; 
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    word-break: break-word; 
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+} */
+
+/*
+    Profile cell
+*/
+
+
+/* 
+.container  table tbody tr .profile > div{
+    gap: 15px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: flex-start;
 }
 
+ */
 
 
-.container .right table td:nth-child(2) img{
+
+ /* timer container */
+/* .container  table tbody tr .profile > div > .details >  div { 
+    gap: 10px;
+    padding-top: 5px;
+    display: flex;
+    align-items: center;
+} */
+
+
+/* timer icon */
+/* .container  table tbody tr .profile > div .details  div  .img{ 
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+ */
+
+
+/* profile image */
+/* .container  table .profile img{  
     width: 60px;
     height: 60px;
     border: none;
     outline: none;
     border-radius: 60%;
+} */
+
+
+
+/* Contact cell */
+
+
+/* .container  table tbody tr .contact div{
+    gap: 20px;
+    display: flex;
+    align-items: center;
 }
+
+
+.container  table tbody tr .contact > div{
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+} */
+
+
+
+/* Status cell */
+
+
+/* .container  table tbody tr .status > div{
+    opacity: 0.8;
+    width: 150px;
+    padding: 10px 20px;
+    border-radius: 30px;
+}
+
+
+
+.container  table tbody tr .status div > div{
+    gap: 10px;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+}
+
+
+
+.container  table tbody tr .status div > div >  .signalPoint{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--signal-text-color);
+}
+
+
+
+.container  table tbody tr .status div .signalPoint, 
+.container  table tbody tr .status div  span
+{
+    filter: brightness(1.6) contrast(120%) saturate(150%);
+}
+
+
+ .container  table tbody tr .status div  span
+{
+    color: var(--app-textColor)
+}
+ */

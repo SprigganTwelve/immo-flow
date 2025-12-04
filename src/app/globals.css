@@ -1,33 +1,59 @@
 
 :root{
-    --fs-high-title: 15px;
-    --fs-welcome-title: 40px;
+    --fs-litte-text: 13px !important;
+    --fs-normal-title: 15px !important;
+    --fs-welcome-title: 40px !important;
+    --basic-smooth-transition: all 600ms ease !important;
 }
 
 *{
     margin: 0;
     padding: 0;
+    border: 0;
+    outline: 0;
 }
 
 body{
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100dvh;
     font-family: 'Poppins', sans-serif ;
 }
 
+
+
+
 .icon-object-properties{
     object-fit: cover;
-    object-position: center;
+    border-radius: 0;
+    object-position: center; 
 }
 
-.icon-medium-size{
-    width: 20px;
-    height: 20px;
+.icon-small-size{
+    width: 25px;
+    height: 25px;
 }
+
+
+.icon-medium-size{
+
+}
+
 
 .icon-active{
     padding: 3px;
     border-radius: 5px;
     transition: padding 2s ease;
     background-color: var(--app-active-icon-background);
+}
+
+.disrupting-pointer-animation{
+    pointer-events: none;   
+}
+
+.text-ellipsis{
+    display: -webkit-box;        /* necessary clamping */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--break-ligne-number);       /* lines to display */
+    overflow: hidden;
+    text-overflow: ellipsis;     /* add "..." */
 }

@@ -1,156 +1,169 @@
 "use client"
 
-import clsx from "clsx";
 
-import React, { 
-    useRef,
-    useState,
-    MouseEvent,
-    RefObject,
-    useCallback,
-    useLayoutEffect,
-} from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/contexts/AppContextProvider";
 
+import Switch from '@/ui/switch/switch'
 
-import Image from "next/image";
+import { LogoIconModel3 } from "@/components/icons/logos";
+import {
+    Search4SvgrepoCom,
+    PaymentEuroSvgrepoCom,
+    DashboardSvgrepoCom,
+    ClientSvgrepoCom,
+    AnalysisOfBusinessStatisticsInALineGraphicWithPointsSvgrepoCom,
+    CurrentLayerSvgrepoCom,
+    LightSvgrepoCom,
+    NightSvgrepoCom,
+    RentSvgrepoCom,
+    ChevronSmallRightSvgrepoCom
+} from "@/components/icons";
 
-import { parseToPercent } from "@/utils/convertion"
 
-import RentSVGLogo from "@/assets/icons/svg/white/parquet-svgrepo-com 1.svg" 
-import ClientSVGLogo from "@/assets/icons/svg/white/client-svg.svg"
-import MaintenanceSVGLogo from "@/assets/icons/svg/white/maintenance.svg"
-import MonitoringSVGLogo from "@/assets/icons/svg/white/supervising.svg"
-import SettingsSVGLogo from "@/assets/icons/svg/white/settings.svg"
-
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import styles from "./style.module.css"
+import clsx from "clsx";
+import { AppDarkTheme, AppWhiteTheme } from "@/utils/appThemes";
 
 
 
 
-type RadiusConfig = [number, number, number, number];
+interface SideBarProps{
+    size?: number
+    svgFill: string
+}
 
 
 
-let [ 
-    outerRadiusX, outerRadiusY,
-    innerRadiusX, innerRadiusY
-]: RadiusConfig = [300, 20, 30, 30]
+export default function SideBar({
+    size= 25, svgFill
+}: SideBarProps){
+  
+    const { setAppTheme } = useAppContext()
 
+    const [ activateMenu, setActivateMenu ] = useState<string>("overview")
+    const [ switchThemeOn, setSwitchThemeOn ] = useState<boolean>(false)
+    const [ shouldDraw, setShouldDraw ] = useState<boolean>(false)
 
-//punchy : [60, 120, 20, 20] // minimalist and net: [50, 100, 15, 25]  //  dynamic and modern: [30, 50, 10, 10] // smooth and fluid : [40, 80, 20, 15, [[50, 30]];  // outer line --220
+    useEffect(() => {
+        const menu = window.localStorage.getItem("currentMenu");
+        if (menu) setActivateMenu(menu);
+    }, []);
 
+    return (
+        <div className={styles.container}>
+            <div className = {styles.wrapper}>
 
+                <div
+                    onClick={()=> setShouldDraw(!shouldDraw)} 
+                    className={styles.drawerIconContainer}
+                    style={{transform: shouldDraw ? "translate(50%) rotate(180deg)" : "" }}
+                >
+                    <ChevronSmallRightSvgrepoCom  fill={svgFill} height={45} width={45}/>
+                </div>
 
+                <MenuItem
+                >
+                    <LogoIconModel3 fill={svgFill} height={size} width={size}/>
+                    <div className={shouldDraw ?  styles.drawingEffect : styles.discardedItem }>
+                        <span className={styles.appName}> ImmoFlow </span>
+                    </div>
+                </MenuItem>
 
-const SideBar = () => {
+                <div className={styles.menuSection}>
 
-    const { AppTheme } = useAppContext()
-    const activeRef = useRef<HTMLDivElement | null>(null)
-    const containerRef = useRef<HTMLDivElement | null>(null)
+                    <div className={clsx(styles.inputContainer, shouldDraw ? styles.drawingEffect : styles.discardedItem )}>
+                        <Search4SvgrepoCom className={styles.searchIcon}  height={30} width={30} />
+                        <input type="text" className={styles.input} placeholder="Search"/>
+                    </div>
 
-    const [ outLineShape, setOutlineShape ] = useState<string>(
-        "M0,0 L1,0 L1,1 L0,1 Z"
-    );
+                    <MenuItem
+                        onClick={()=> {
+                            setActivateMenu("overview")
+                            localStorage.setItem("currentMenu", "overview")
+                        }}
+                        activateCondition={activateMenu === "overview"}
+                    >
+                        <DashboardSvgrepoCom fill={svgFill} height={size} width={size}/>
+                        <div className={shouldDraw ? styles.drawingEffect : styles.discardedItem }>
+                            <span className={styles.title}>Overview</span>
+                        </div>
+                    </MenuItem>
+                    
+                    <MenuItem
+                        onClick={()=> {
+                            setActivateMenu("holders")
+                            localStorage.setItem("currentMenu", "holders")
+                        }}
+                        activateCondition={activateMenu === "holders"}
+                    >
+                        <ClientSvgrepoCom fill={svgFill} height={size} width={size}/>
+                        <div className={ shouldDraw ? styles.drawingEffect : styles.discardedItem }>
+                            <span className={styles.title}>Lease Holder</span>
+                        </div>
+                    </MenuItem>
 
-    const [ activeMenu, setActiveMenu ] = useState<string>("rent")
+                    <MenuItem
+                        onClick={()=> {
+                            setActivateMenu("transaction")
+                            localStorage.setItem("currentMenu", "transaction")
+                        }}
+                        activateCondition={activateMenu === "transaction"}
+                    >
+                        <PaymentEuroSvgrepoCom fill={svgFill} height={size} width={size}/>
+                        <div className={ shouldDraw ? styles.drawingEffect : styles.discardedItem }>
+                            <span className={styles.title}>Transaction</span>
+                        </div>
+                    </MenuItem>
 
-    const handleIsMenuActive = useCallback((event: React.MouseEvent<HTMLDivElement>, active: string)=>{
-        setActiveMenu(active)
-    },[])
+                    <MenuItem
+                        onClick={()=> {
+                            setActivateMenu("estate")
+                            localStorage.setItem("currentMenu", "estate")
+                        } }
+                        activateCondition={activateMenu === "estate"}
+                    >
+                        <CurrentLayerSvgrepoCom fill={svgFill} height={size} width={size}/>
+                        <div className={shouldDraw ? styles.drawingEffect : styles.discardedItem}>
+                            <span className={styles.title}>Estate</span>
+                        </div>
+                    </MenuItem>
 
-    useLayoutEffect(()=>{
-        if(!activeRef.current || !containerRef.current){
-            return
-        }
+                    <MenuItem
+                        onClick={()=> {
+                            setActivateMenu("analytics")
+                            localStorage.setItem("currentMenu", "analytics")
+                        } }
+                        activateCondition={activateMenu === "analytics"}
+                    >
+                        <AnalysisOfBusinessStatisticsInALineGraphicWithPointsSvgrepoCom fill={svgFill} height={size} width={size}/>
+                        <div className={shouldDraw ? styles.drawingEffect : styles.discardedItem}>
+                            <span className={styles.title}>Analytics</span>
+                        </div>
+                    </MenuItem>
 
+                    <div className={styles.switchContainer}>
+                        <div className={ shouldDraw ? styles.drawingEffect : styles.discardedItem}>
+                            {
+                                switchThemeOn ? 
+                                            <LightSvgrepoCom  fill={svgFill} height={35} width={35}/>
+                                        :   <NightSvgrepoCom  fill={svgFill} height={35} width={35} />
+                            }
+                            <span className={styles.title}>{switchThemeOn ? "Light Mode" : "Night Mode"}</span>
+                        </div>
+                        <Switch 
+                            state={switchThemeOn}
+                            setState={setSwitchThemeOn}
+                            onChange={(value)=>{
+                                if(value) 
+                                    setAppTheme(AppWhiteTheme)
+                                else
+                                    setAppTheme(AppDarkTheme)
+                            }}
+                        />
+                    </div>
 
-        const dimens = activeRef.current.getBoundingClientRect()
-        const containerMaxWidth = containerRef.current.offsetWidth
-        const containerMaxHeight = containerRef.current.offsetHeight
-
-        const x = parseToPercent(dimens.x, containerMaxWidth)
-        const y = parseToPercent(dimens.y, containerMaxHeight)
-        const x2 = x + parseToPercent(dimens.width, containerMaxWidth)
-        const y2 = y + parseToPercent(dimens.height, containerMaxHeight)
-
-        const outerRadiusXPercent = parseToPercent(outerRadiusX, containerMaxWidth)
-        const outerRadiusYPercent = parseToPercent(outerRadiusY, containerMaxHeight)
-        const innerRadiusXPercent = parseToPercent(innerRadiusX, containerMaxWidth)
-        const innerRadiusYPercent = parseToPercent(innerRadiusY, containerMaxHeight)
-
-
-        const shape = `
-            M0,0 L1,0 
-            L${x2},${y - outerRadiusYPercent} 
-            A${outerRadiusXPercent} ${outerRadiusYPercent} 0 0 1 ${x2 - outerRadiusXPercent},${y} 
-            L${x + innerRadiusXPercent},${y} 
-            A${innerRadiusXPercent} ${innerRadiusYPercent} 0 0 0 ${x},${y + innerRadiusYPercent} 
-            L${x},${y2 - innerRadiusYPercent} 
-            A${innerRadiusXPercent} ${innerRadiusYPercent} 0 0 0 ${x + innerRadiusXPercent},${y2} 
-            L${x2 - outerRadiusXPercent},${y2} 
-            A${outerRadiusXPercent} ${outerRadiusYPercent} 0 0 1 ${x2},${y2 + outerRadiusYPercent} 
-            L1,1 L0,1 Z
-        `
-
-        setOutlineShape(shape)
-    },[activeMenu])
-
-
-    return ( 
-        <div 
-            ref={containerRef}
-            style={{ 
-                [ "--textColor" as any ] : AppTheme.SIDEBAR.TEXTCOLOR,
-                [ "--backgroundColor" as any ] : AppTheme.SIDEBAR.BACKGROUNDCOLOR,
-                [ "--activeTextColor" as any ] : AppTheme.SIDEBAR.ACTIVE?.TEXTCOLOR || AppTheme.SIDEBAR.TEXTCOLOR
-            }}
-            className={styles.container}
-        >
-            <div className={styles.content} >
-                <MenuItem 
-                    text="Rent"
-                    leading={RentSVGLogo}
-                    ref={activeMenu === "rent" ? activeRef : undefined}
-                    onClick={(event) => handleIsMenuActive(event, "rent")}
-                    className={ activeMenu === "rent" ? styles.isActive : "" }
-                />
-                <MenuItem 
-                    text="Tenants"
-                    leading={ClientSVGLogo}
-                    ref={activeMenu === "tenants" ? activeRef : undefined}
-                    onClick={(event) => handleIsMenuActive(event, "tenants")}
-                    className={ activeMenu === "tenants" ? styles.isActive : "" }
-                />
-                <MenuItem 
-                    text="Maintenance"
-                    leading={MaintenanceSVGLogo}
-                    ref={activeMenu === "maintenance" ? activeRef : undefined}
-                    onClick={(event) => handleIsMenuActive(event, "maintenance")}
-                    className={ activeMenu === "maintenance" ? styles.isActive : "" }
-                />
-                <MenuItem 
-                    text="Monitoring"
-                    leading={MonitoringSVGLogo}
-                    ref={activeMenu === "monitoring" ? activeRef : undefined}
-                    onClick={(event) => handleIsMenuActive(event, "monitoring")}
-                    className={ activeMenu === "monitoring" ? styles.isActive : "" }
-                />
-                <MenuItem 
-                    text="Settings"
-                    leading={SettingsSVGLogo}
-                    ref={activeMenu === "settings" ? activeRef : undefined}
-                    onClick={(event) => handleIsMenuActive(event, "settings")}
-                    className={ activeMenu === "settings" ? styles.isActive : "" }
-                />
-                <svg width="0" height="0">
-                    <defs>
-                        <clipPath id="containerShape" clipPathUnits="objectBoundingBox">
-                            <path strokeLinecap="round" strokeLinejoin="round"  d={outLineShape} /> 
-                        </clipPath>
-                    </defs>
-                </svg>
+                </div>
             </div>
         </div>
     );
@@ -158,40 +171,42 @@ const SideBar = () => {
 
 
 
-export default SideBar;
 
 
+interface MenuItemProps{
+    onClick?: ()=> void;
+    children?: React.ReactNode,
+    activateCondition?: boolean;
+}
+
+const  MenuItem: React.FC<MenuItemProps> = ({
+ onClick,
+ children,
+ activateCondition,
+}) => {
+    return (
+        <div
+            onClick={onClick}
+            className={clsx(styles.menuItemContainer, activateCondition &&  styles.menuItemActivate)}
+        >
+            { children }
+        </div>
+    );
+}
+
+interface MenuGroupProps{
+    
+}
 
 
+const MenuGroup: React.FC<MenuGroupProps> = ({
 
-const MenuItem: React.FC<{
-    alt?: string;
-    text: string;
-    className?: string;
-    leading: string | StaticImport;
-    ref?: RefObject<HTMLDivElement | null> | undefined;
-    onClick?: (event: MouseEvent<HTMLDivElement>)=> void;
-}> = ({
-    ref,
-    text,
-    leading,
-    onClick,
-    alt = "",
-    className
 }) => {
     return ( 
-        <div
-            ref={ref}
-            onClick={onClick} 
-            className={clsx(styles.menuContainer, className)}
-        >
-            <div>
-                <Image 
-                    src={leading} alt={alt}
-                    className="icon-object-properties icon-medium-size "
-                />
-                <span>{text}</span>
-            </div>
+        <div>
+
         </div>
     );
 }
+ 
+ 
