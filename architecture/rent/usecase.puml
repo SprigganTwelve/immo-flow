@@ -1,0 +1,71 @@
+@startuml
+
+    left to right direction
+
+    skinparam rectanglePadding 5
+    skinparam usecasePadding 5
+    skinparam rectangleMargin 10
+
+    actor Landlord
+    
+
+    rectangle "Rent management"  {
+        (Assign apartment to tenant) as US1
+        
+        (Enter the payment details) as US11
+        (Enter the tenants information) as US12
+        (Define type of rental)     as US13
+        
+        (Clear rent) as US2
+        (Validate Cancelling rental) as US21
+        
+        (view all rent) as US3
+        (view tenants)  as US31
+        (Access the contract) as US32
+        
+        (Billing tenant) as US4
+        (Create invoice for tenants) as US41
+        (Send Bill to tenants) as US42
+        
+        
+        (Generate rental report) as US5
+        (Sent rental report to client) as US51
+
+        (view payment trend chart)  as US6
+        (view rent trend chart)     as US7
+        
+        /'() as US5'/
+    }
+
+    Landlord -> US1
+    US1 ..> US11 : <<include>>
+    US1 ..> US12 : <<include>>
+    US1 ..> US13 : <<include>>
+    
+    
+    Landlord --> US2
+    US2 ..> US21 : <<include>>
+    
+    Landlord -> US3
+    Landlord --> US31
+    US3 <.left. US31 : <<extends>>
+    US3 <.. US32     : <<extends>>
+
+
+
+    Landlord -> US4
+    US4 <.. US41 : <<extends>>
+    US4 <.. US42 : <<extends>>
+
+    Landlord ->  US5
+    US5 <..  US51: <<extends>>
+    
+    Landlord -> US6
+    Landlord -> US7
+
+    US6 <.left. US7 
+    US7 <.left. US6 : <<extends>>
+    
+
+    
+@enduml

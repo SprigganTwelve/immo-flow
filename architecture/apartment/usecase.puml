@@ -1,0 +1,62 @@
+@startuml
+
+
+left to right direction
+
+Actor Landlord
+
+rectangle "Apartment Management" {
+
+    'Global
+    (Confirm Validation) as USG1
+    
+    'Arrange apotement
+    (Arrange apointement) as US1
+    (Save apartement) as US12
+    (Delegate apartement) as US13
+    (Save Contract) as US14
+
+    'Manage apartment
+
+    (View all apartment) as US3
+
+    (View particular apartment) as US31
+    (discard apartement) as US311
+    (View 2D) as US312
+    (View 3D) as US313
+    (have the apartement repaired) as US33
+
+    (Seacrh apartment by name, features) as US4
+}
+
+
+'Buy apartement
+
+Landlord -left-> US1
+US1 <.. US12 : <<extends>>
+US1 <.. US13 : <<extends>>
+US1 <.. US14 : <<extends>>
+
+US12 ..> USG1: <extends>>
+US13 ..> USG1: <extends>>
+US14 ..> USG1: <extends>>
+
+'Manage appartement
+Landlord --> US3
+US3   <.. US31   : <<extends>>
+US31  <.. US311  : <extends>>
+US311 ..> USG1   : <<include>>
+
+US31  <.. US312  : <<extends>>
+US31  <.. US313  : <<extends>>
+
+Landlord --> US4
+US4 <.. US31 : <<extends>>
+
+'Repair apartment
+
+US3 <.. US33: <<extends>>
+
+
+
+@enduml

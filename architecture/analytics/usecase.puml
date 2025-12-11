@@ -1,0 +1,63 @@
+@startuml 
+
+left to right direction
+
+actor Landlord
+
+
+rectangle "Analytics Management"{
+    ( View KPI) as USG
+    ( View payement statistics) as US1
+
+    'number of rent made per day along the 30 past days
+    ( View rent statistics data) as US2
+    usecase "View new entrants(tenants) statistics" as US3
+
+    ( View line chart ) as US4
+    ( View bart chart ) as US5
+    ' ( View  pie chart ) as US6
+
+    ' ( Clear chart ) as US7
+    
+    ( merge statistics data ) as US8
+    ( separate statistics data ) as US9
+    ( update statistics  )  as  US10
+    ( Generate prediction ) as US11
+}
+
+
+Landlord --> USG
+Landlord --> US1
+Landlord --> US2
+Landlord --> US3
+Landlord --> US11
+
+'payement
+
+US1 <.down. US4 : <<extends>>
+US1 <.. US5 : <<extends>>
+
+'rent
+
+US2 <.down. US4    :<<extends>>
+US2 <.down. US5    :<<extends>>
+
+
+'new tenants
+
+US3 <.. US4 : <<extends>
+US3 <.. US5 : <<extends>
+
+'line charts options
+
+US4 <.. US8: <<extends>>
+US4 <.. US9: <<extends>>
+' US4 <.. US10: <<extends>>
+
+
+US5 <.. US8: <<extends>>
+US5 <.. US9: <<extends>>
+' US5 <.. US10: <<extends>>
+
+
+@enduml

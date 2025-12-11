@@ -1,0 +1,118 @@
+@startuml 
+
+top to bottom direction
+
+title "Class Diagramm (atomic archictecture)"
+
+
+class Person{
+    - firstName: String
+    - lastName: String
+    - email: String
+    - address: String
+    + sendMessage(String message): void 
+}
+
+
+Class Landlord{
+    -id: Sting
+}
+
+
+class Tenant {
+    -id: String
+}
+
+
+Person <|-up- Landlord
+Person <|-right- Tenant
+
+
+class AccountDetails{
+    - iban:         String    
+    - bankName:     String
+    - cardNumber:   Number
+    - cardType:     Number
+    - expiryDate:   DateTime
+    - currency:     DateTime
+}
+
+
+class Rent{
+    - montant: Number
+    - type: RENTTYPE
+    - createDate: DateTime
+    - fillIn    : Number
+    - updateDate: DateTime
+}
+
+enum RENTTYPE{
+    INDIVIDUAL
+    COLLECTIVE
+}
+
+
+Tenant "1..n"  *-- "1..n" AccountDetails: > owns
+Tenant "1..1"  *-right- "1..1" Rent : hold > 
+
+
+class Appartment{
+    - id: Number
+    - name: Number
+    - location: String
+    - rentFee: Number
+    - saleValue : Number
+}
+
+
+Appartment "1..1" <-- "1..1" Rent : has <
+Appartment  <-- Landlord:  possesses
+
+
+class CompressedFile{
+    - id: Number
+    - url: String
+    - name: String
+    - file: File?
+    + getUnZipFile(): File
+}
+
+
+
+
+
+class 3DModel{
+    + stopAnimation(): void
+    + launchOrbitAnimation(): void
+    + discardFromScene(Scene scene): void
+    + setFocusOnCursorPosition(Position coord) : void
+    + setPostionRelativeTo(3DModel model): void
+}
+
+interface Position {
+    - x: Number
+    - y: Number
+}
+
+class Image{
+    + getCroppedImage(int width, height, Position coord): void
+    + blur(px pixel): void
+    + filter(brightness, blur...)      : void
+}
+
+
+
+CompressedFile <|-down- 3DModel
+CompressedFile <|-- Image
+
+3DModel "0..n" -right-> "0..1" Appartment: display
+Image  "0..n" <-right- "0..1"  Appartment:   d
+
+
+Tenant "1..1" --> "1..1" 3DModel : display
+Tenant "1..1" --> "1..1" Image   : display
+
+
+
+
+@enduml

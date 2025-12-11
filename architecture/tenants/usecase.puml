@@ -1,0 +1,55 @@
+@startuml
+
+left to right direction
+
+actor Landlord
+
+rectangle "Tenants management" {
+
+    ' Single tenant
+
+    usecase "add tenant((s) in row)"    as US1
+    usecase "delete tenant(s)" as US2
+
+    ' --- View / Search ---
+
+    usecase "View all tenants"        as US3
+    usecase "View specific tenant"    as US31
+
+    usecase "Search specific tenant" as US4
+
+    'Modify
+
+    usecase "Modify tenant((s) in row)" as US5
+
+    'Group
+    usecase "Gather tenants into group" as US6
+    usecase "Select leader" as US61
+}
+
+' --- Actor relations ---
+
+Landlord --> US1
+Landlord --> US3
+Landlord --> US4
+
+' --- Create/Delete relations ---
+US1 <.. US2  : <<extends>>
+
+' --- View relations ---
+US3  <.right. US31 : <<extends>>
+US4  <.right. US31 : <<extends>>
+
+' --- Delete depends on specific tenant --
+
+US31 <.. US2: <<extends>>
+Landlord --> US5
+
+Landlord --> US6
+US5 <.. US2     : <<extends>>
+US6 ..> US61    : <<include>>
+
+US6 <.. US2    : <<extends>>
+
+
+@enduml
