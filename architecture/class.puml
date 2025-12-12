@@ -4,8 +4,7 @@ top to bottom direction
 
 title "Class Diagramm (atomic archictecture)"
 
-
-'Main
+'-----------Main--------------
 
 class Person{
     - id: String
@@ -25,9 +24,51 @@ interface ILandlordRepositiory{
 }
 
 Landlord "1..1" *-- "1..n" Tenant       : > holds  
+ILandlordRepositiory <|.right. Landlord : depend on
 
 
-'Tenants
+'Documents
+abstract class AbstractDocumentTemplate {
+    - id: Number
+    - page: Layout
+}
+
+
+interface IDocumentToolkit{
+    + print(AbstractDocumentTemplate? template): void;
+    'Static Method
+    + buildTemplate(AbstractDocumentTemplate t) : statict Template 
+}
+
+
+AbstractDocumentTemplate <|.. IDocumentToolkit
+
+interface IDocumentTemplateRepository{
+    add(Template template): void
+}
+
+
+IManagedRepository <|.right. IDocumentTemplateRepository: < depend on
+IDocumentTemplateRepository <|..  AbstractDocumentTemplate
+
+
+class Report {
+    - id: Number
+    - title: String
+    - description: String
+    - file: CompressedFile
+}
+
+interface IReport{
+    + add(Report report): void
+}
+
+IDocumentToolkit <|.. Report : < depends on
+
+
+
+
+'----------------------Tenants----------------
 
 class Tenant {}
 
@@ -37,12 +78,15 @@ Person <|-- Tenant
 
 
 class TenantGroup{
-    - leaderId: int
-    + generatePaiement(): void
+    - responsableId : int
+    + generateBill(): void
 }
 
 
-interface ITenantGroupRepository{}
+interface ITenantGroupRepository{
+    + add(TenantGroup group): void
+    + dispatchBill(): void
+}
 
 
 IManagedRepository <|.. ITenantGroupRepository : < depend on
@@ -70,45 +114,79 @@ interface ITenantRepository{
 
 
 
-
-ILandlordRepositiory <|.right. Landlord : depend on
 ITenantRepository .up.|> IManagedRepository : depend on >
 ITenantRepository <|.down. Tenant: < depend on
 
 
-'Billings
+'---------Billings--------------------
 
 
 
-class AccountDetails{
+class BankCard{
     - iban:         String    
     - bankName:     String
     - cardNumber:   Number
-    - cardType:     Number
+    - cardType:     String
     - expiryDate:   DateTime
     - currency:     DateTime
 }
 
 
-
 class Bill{
     - id: Number
     - amount: Number
-    - date: DateTime
+    - createDate: DateTime
+    - maturityDate: DateTime
 }
 
+Tenant "1..n" o-- "1..n" Bill: make >
+Tenant "1..n"  *-down- "1..n" BankCard: > owns
+Bill <|.left. IDocumentToolkit
+
 interface IBillRepository{
-    add(Bill bill): void
+    + add(Bill bill): void
+    + getRemainingAmout(): void
 }
+
 
 IManagedRepository <.. IBillRepository: < depend on
 IBillRepository <.left. Bill : < depend on
 
-AccountDetails "1..n" o-right- "1..1" Bill: make >
-Tenant "1..n"  *-up- "1..n" AccountDetails: > owns
+
+class RentReceipt{
+    - paid: Number
+    - date: DateTime
+}
 
 
-'Rents
+IDocumentToolkit <|.right. RentReceipt 
+RentReceipt "1..n" -down-o "1..1" Bill : < create 
+RentReceipt "1..n" --o "1..1" BankCard : is used by >
+
+
+interface IRentReceiptInterface{}
+
+
+IManagedRepository <|.right. IRentReceiptInterface : <depend on
+IRentReceiptInterface <|.. RentReceipt : < depends on
+
+    
+
+Rent   <|.up. IDocumentToolkit : control < 
+
+
+class Debts{
+    - id: Number
+    - label: String
+    - amount: Number
+    - description: String
+}
+
+Tenant "1..1" o-up- "1..n" Debts:  > has
+Debts "1..1" -right-> "1..1" Bill: > relate to 
+
+
+'----------------------Rents------------------------
 
 
 class Rent{
@@ -117,10 +195,16 @@ class Rent{
     - createDate: DateTime
     - fillIn    : Number
     - lease     : File
-    - updateDate: DateTime
+    - start     : DateTime
+    - end       : DateTime
+    - endDate   : DateTime
+
+    +generateLease(): File
 }
 
+
 Rent -- RENTTYPE : > contains 
+
 
 interface IRentRepository{
     + sendViaEmail(Person id): void  
@@ -130,29 +214,21 @@ interface IRentRepository{
 
 IRentRepository ..|> IManagedRepository: depends on >
 
+
+
 enum RENTTYPE{
     INDIVIDUAL
     COLLECTIVE
 }
 
 
-class Report {
-    - id: Number
-    - title: String
-    - description: String
-    - file: CompressedFile
-}
-
-interface IReportInterface{
-    + add(Report report): void
-}
 
 
-IManagedRepository <|.. IReportInterface : < depend on
-Report <|.up. IReportInterface : < depend on
+IManagedRepository <|.. IReport : < depend on
+Report <|.up. IReport : < depend on
 
 
-Tenant "1..1"  -right- "1..1" Rent : hold > 
+Tenant "1..1"  -up- "1..1" Rent : hold > 
 TenantGroup --o Rent : hold > 
 
 Rent "1..1" o-right- "1..1" Report : create >
@@ -160,7 +236,7 @@ Rent .left.|> IRentRepository      : depend on >
 
 
 
-'Apartements
+'--------------------Apartements--------------------------
 
 
 class Appartment{
@@ -190,7 +266,8 @@ Appartment "0..n" <-up- "1..1" Landlord:  possesses/view
 
 
 
-'Buying/Selling
+
+'--------------------------Buying/Selling------------------------
 
 
 
@@ -210,7 +287,7 @@ interface IAppointmentRepository{
 }
 
 
-Appartment o-- Appointment : < arranged on
+Appartment o-up- Appointment : < arranged on
 
 Appointment <|.up. IAppointmentRepository: depond on >
 IAppointmentRepository ..> IManagedRepository :  depnd on >
@@ -243,7 +320,7 @@ Chart -right- ChartMode:  > contains
 
 Rent     "1..n" <-left-  "1..1" Chart : > generate
 Bill "1..n" <-down-  "1..1" Chart : > generate
-Report   "1..n" <-down-  "1..1" Chart : > generate
+Report   "1..n" <-down-  "1..1" Chart :  generate <
 
 
 class Prediction{
@@ -259,14 +336,14 @@ interface IPredictionRepository{
     add(Prediction prediction): void
 }
 
-IManagedRepository <.. IPredictionRepository: < depend on 
+IManagedRepository <.up. IPredictionRepository: < depend on 
 IPredictionRepository <|.. Prediction : < depend on 
 
-Chart "1..1" *-up- "0..1" Prediction: > can make
+Chart "1..1" *-up- "0..1" Prediction: > associate
 
 
 
-'2D/3D Graphics Models
+'--------------------2D/3D Graphics Models--------------------
 
 
 class CompressedFile{
@@ -306,8 +383,6 @@ Image  "0..n" <-right- "0..1"  Appartment:   display <
 
 Tenant "1..1" --> "1..1" 3DModel : display
 Tenant "1..1" --> "1..1" Image   : display
-
-
 
 
 
