@@ -25,8 +25,26 @@ interface ILandlordRepositiory{
     + logout(int id): void
 }
 
+
+
 Landlord "1..1" *-- "1..n" Tenant       : > holds  
 ILandlordRepositiory <.right. Landlord : depend on
+
+
+class CognitiveAgent {
+    + ask(String str): String
+}
+
+Landlord *-up- CognitiveAgent : > ask
+CognitiveAgent -- Prediction
+
+'Global user of any external service as AI or Templating
+    abstract class Engine{
+        - drive : Drive
+        - package: String
+        - description?: String
+        + generateDocument(TemplateDocument template): Document
+    }
 
 
 
@@ -35,32 +53,36 @@ ILandlordRepositiory <.right. Landlord : depend on
 '========================================
 
 
-abstract class AbstractDocumentTemplate {
+
+
+abstract class AbstractTemplateDocument {
     - id: Number
-    - page: HTMLDocument
-    - engine: Engine
+    - template: TemplateDocument
 }
+
+AbstractTemplateDocument "0..n" -> "1..1" DocumentType : has source
+
+
+enum DocumentType{
+    PDF
+    WORD
+    EXCEL
+}
+
+
+AbstractTemplateDocument "1..1" --> "1..n" Engine : > use 
 
 
 interface IDocumentToolkit{
-    + print(AbstractDocumentTemplate? template): void;
+    + print(): void;
     'Static Method
-    + generatePDFFromLayout(): PDFFile
-    + buildTemplate(AbstractDocumentTemplate t) : statict Template
+    + generateDocument(): Document
+    + buildTemplate(File file, DocumentType type) :  TemplateDocument
 }
 
 
-IDocumentToolkit <|.up. AbstractDocumentTemplate : implements
+IDocumentToolkit <|.up. AbstractTemplateDocument : implements
 
-
-
-interface IDocumentTemplateRepository{
-    add(Template template): void
-}
-
-
-IManagedRepository <|.right. IDocumentTemplateRepository: < implement
-IDocumentTemplateRepository <|..  AbstractDocumentTemplate
 
 
 class Report {
@@ -70,12 +92,13 @@ class Report {
     - file: CompressedFile
 }
 
+
 interface IReport{
     + add(Report report): void
 }
 
-IReport  <|.. Report : < depend on
 
+IReport  <|.. Report : < depend on
 IDocumentToolkit <|.. Report : < implement
 
 
