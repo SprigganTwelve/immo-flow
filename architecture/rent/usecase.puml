@@ -16,7 +16,7 @@
         (Enter the tenants information) as US12
         (Define type of rental)     as US13
         
-        (Clear rent) as US2
+        (Delete rent) as US2
         (Validate Cancelling rental) as US21
         
         (view all rent) as US3
@@ -30,6 +30,7 @@
         
         (Generate rental report) as US5
         (Sent rental report to client) as US51
+        (View rental report line chart) as US52
 
         (view payment trend chart)  as US6
         (view rent trend chart)     as US7
@@ -59,6 +60,7 @@
 
     Landlord ->  US5
     US5 <..  US51: <<extends>>
+    US5 <..  US52: <<extends>>
     
     Landlord -> US6
     Landlord -> US7

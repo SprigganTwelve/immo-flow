@@ -5,27 +5,79 @@ top to bottom direction
 title "Class Diagramm (atomic archictecture)"
 
 
+'Main
+
 class Person{
+    - id: String
     - firstName: String
     - lastName: String
     - email: String
     - address: String
-    + sendMessage(String message): void 
+    - createDate: DateTime
+    - updateDate: DateTime
 }
 
 
-Class Landlord{
-    -id: Sting
+Class Landlord{}
+interface ILandlordRepositiory{
+    + login(int id) : Token
+    + logout(int id): void
 }
 
+Landlord "1..1" *-- "1..n" Tenant       : > holds  
 
-class Tenant {
-    -id: String
-}
+
+'Tenants
+
+class Tenant {}
 
 
 Person <|-up- Landlord
-Person <|-right- Tenant
+Person <|-- Tenant
+
+
+class TenantGroup{
+    - leaderId: int
+    + generatePaiement(): void
+}
+
+
+interface ITenantGroupRepository{}
+
+
+IManagedRepository <|.. ITenantGroupRepository : < depend on
+ITenantGroupRepository <|.. TenantGroup        : < depend on
+
+Tenant "1..n" *-left- "1..1" TenantGroup : > compose
+
+
+
+interface IManagedRepository {
+    + getAll(): void
+    + getById(int id): void
+    + deleteById(int id): void
+    + deleteAll(List<int>? ids): void
+    + update(int id,List<String> keys, List<Object> values): void
+    + getCount(int id, Duration? time): void
+}
+
+
+
+interface ITenantRepository{
+    + add(Tenant tenant): void
+}
+
+
+
+
+
+ILandlordRepositiory <|.right. Landlord : depend on
+ITenantRepository .up.|> IManagedRepository : depend on >
+ITenantRepository <|.down. Tenant: < depend on
+
+
+'Billings
+
 
 
 class AccountDetails{
@@ -38,13 +90,45 @@ class AccountDetails{
 }
 
 
+
+class Bill{
+    - id: Number
+    - amount: Number
+    - date: DateTime
+}
+
+interface IBillRepository{
+    add(Bill bill): void
+}
+
+IManagedRepository <.. IBillRepository: < depend on
+IBillRepository <.left. Bill : < depend on
+
+AccountDetails "1..n" o-right- "1..1" Bill: make >
+Tenant "1..n"  *-up- "1..n" AccountDetails: > owns
+
+
+'Rents
+
+
 class Rent{
     - montant: Number
     - type: RENTTYPE
     - createDate: DateTime
     - fillIn    : Number
+    - lease     : File
     - updateDate: DateTime
 }
+
+Rent -- RENTTYPE : > contains 
+
+interface IRentRepository{
+    + sendViaEmail(Person id): void  
+    + add(Rent rent): void
+}
+
+
+IRentRepository ..|> IManagedRepository: depends on >
 
 enum RENTTYPE{
     INDIVIDUAL
@@ -52,8 +136,31 @@ enum RENTTYPE{
 }
 
 
-Tenant "1..n"  *-- "1..n" AccountDetails: > owns
-Tenant "1..1"  *-right- "1..1" Rent : hold > 
+class Report {
+    - id: Number
+    - title: String
+    - description: String
+    - file: CompressedFile
+}
+
+interface IReportInterface{
+    + add(Report report): void
+}
+
+
+IManagedRepository <|.. IReportInterface : < depend on
+Report <|.up. IReportInterface : < depend on
+
+
+Tenant "1..1"  -right- "1..1" Rent : hold > 
+TenantGroup --o Rent : hold > 
+
+Rent "1..1" o-right- "1..1" Report : create >
+Rent .left.|> IRentRepository      : depend on >
+
+
+
+'Apartements
 
 
 class Appartment{
@@ -61,12 +168,105 @@ class Appartment{
     - name: Number
     - location: String
     - rentFee: Number
+    - inRepair: boolean
     - saleValue : Number
+    - visibility: boolean
 }
 
 
-Appartment "1..1" <-- "1..1" Rent : has <
-Appartment  <-- Landlord:  possesses
+interface IAppartementRepository{
+    + delegate(int id): void
+    + saveContract(File file): void
+    + incorporateAppartment(int id) : void
+    + setInRepair(boolean bool): void
+}
+
+
+IManagedRepository  <|.left. IAppartementRepository: < depend on
+IAppartementRepository <|.. Appartment : < depend on
+
+Appartment "1..1" <-right- "1..1" Rent : has <
+Appartment "0..n" <-up- "1..1" Landlord:  possesses/view
+
+
+
+'Buying/Selling
+
+
+
+class Appointment{
+    - id: Number
+    - decription: String
+    - date  : DateTime
+    - activate : bool
+    + createFormData(): FormData
+    + changeState(): void 
+}
+
+
+interface IAppointmentRepository{
+    + toogleAtivation(): void
+    + add(FormData formaData): void
+}
+
+
+Appartment o-- Appointment : < arranged on
+
+Appointment <|.up. IAppointmentRepository: depond on >
+IAppointmentRepository ..> IManagedRepository :  depnd on >
+
+
+'Graphs
+
+enum ChartEnum{
+    LINECHART
+    AREACHART
+    BARCHART
+    PIRCHART
+}
+
+enum ChartMode{
+    COMPARE
+    SEPARATE
+    MERGE
+}
+
+
+class Chart{
+    - type: ChartEnum
+    - mode: ChartMode
+    + generateDataset(): ChartDataset
+}
+
+Chart -right- ChartEnum:  > contains
+Chart -right- ChartMode:  > contains
+
+Rent     "1..n" <-left-  "1..1" Chart : > generate
+Bill "1..n" <-down-  "1..1" Chart : > generate
+Report   "1..n" <-down-  "1..1" Chart : > generate
+
+
+class Prediction{
+    - id: String
+    - title: String
+    - description
+    - createDate: DateTime
+    - updateDate: DateTime
+}
+
+
+interface IPredictionRepository{
+    add(Prediction prediction): void
+}
+
+IManagedRepository <.. IPredictionRepository: < depend on 
+IPredictionRepository <|.. Prediction : < depend on 
+
+Chart "1..1" *-up- "0..1" Prediction: > can make
+
+
+
+'2D/3D Graphics Models
 
 
 class CompressedFile{
@@ -78,9 +278,6 @@ class CompressedFile{
 }
 
 
-
-
-
 class 3DModel{
     + stopAnimation(): void
     + launchOrbitAnimation(): void
@@ -89,10 +286,7 @@ class 3DModel{
     + setPostionRelativeTo(3DModel model): void
 }
 
-interface Position {
-    - x: Number
-    - y: Number
-}
+
 
 class Image{
     + getCroppedImage(int width, height, Position coord): void
@@ -105,12 +299,14 @@ class Image{
 CompressedFile <|-down- 3DModel
 CompressedFile <|-- Image
 
-3DModel "0..n" -right-> "0..1" Appartment: display
-Image  "0..n" <-right- "0..1"  Appartment:   d
+
+3DModel "0..n" <-up- "0..1" Appartment:   display <
+Image  "0..n" <-right- "0..1"  Appartment:   display <
 
 
 Tenant "1..1" --> "1..1" 3DModel : display
 Tenant "1..1" --> "1..1" Image   : display
+
 
 
 
