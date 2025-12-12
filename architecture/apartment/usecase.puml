@@ -37,11 +37,12 @@ US1 <.. US12 : <<extends>>
 US1 <.. US13 : <<extends>>
 US1 <.. US14 : <<extends>>
 
-US12 ..> USG1: <extends>>
-US13 ..> USG1: <extends>>
-US14 ..> USG1: <extends>>
+US12 ..> USG1: <<include>>
+US13 ..> USG1: <<include>>
+US14 ..> USG1: <<include>>
 
 'Manage appartement
+
 Landlord --> US3
 US3   <.. US31   : <<extends>>
 US31  <.. US311  : <extends>>

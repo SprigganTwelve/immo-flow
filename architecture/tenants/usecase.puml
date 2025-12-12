@@ -24,23 +24,30 @@ rectangle "Tenants management" {
 
     'Group
     usecase "Gather tenants into group" as US6
-    usecase "Select leader" as US61
+    usecase "Select leader/responsable" as US61
 }
 
+
 ' --- Actor relations ---
+
 
 Landlord --> US1
 Landlord --> US3
 Landlord --> US4
 
+
 ' --- Create/Delete relations ---
+
 US1 <.. US2  : <<extends>>
 
 ' --- View relations ---
+
 US3  <.right. US31 : <<extends>>
 US4  <.right. US31 : <<extends>>
 
+
 ' --- Delete depends on specific tenant --
+
 
 US31 <.. US2: <<extends>>
 Landlord --> US5

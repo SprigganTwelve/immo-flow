@@ -2,7 +2,7 @@
 
 top to bottom direction
 
-title "Class Diagramm (atomic archictecture)"
+title <b><size:30>&#160;&#160; Class Diagram (Atomic Architecture) &#160;&#160;</size></b>
 
 '-----------Main--------------
 
@@ -30,14 +30,16 @@ ILandlordRepositiory <|.right. Landlord : depend on
 'Documents
 abstract class AbstractDocumentTemplate {
     - id: Number
-    - page: Layout
+    - page: HTMLDocument
+    - engine: Engine
 }
 
 
 interface IDocumentToolkit{
     + print(AbstractDocumentTemplate? template): void;
     'Static Method
-    + buildTemplate(AbstractDocumentTemplate t) : statict Template 
+    + generatePDFFromLayout(): PDFFile
+    + buildTemplate(AbstractDocumentTemplate t) : statict Template
 }
 
 
@@ -48,7 +50,7 @@ interface IDocumentTemplateRepository{
 }
 
 
-IManagedRepository <|.right. IDocumentTemplateRepository: < depend on
+IManagedRepository <|.right. IDocumentTemplateRepository: < implement
 IDocumentTemplateRepository <|..  AbstractDocumentTemplate
 
 
@@ -63,7 +65,9 @@ interface IReport{
     + add(Report report): void
 }
 
-IDocumentToolkit <|.. Report : < depends on
+IReport  <|.. Report : < depend on
+
+IDocumentToolkit <|.. Report : < implement
 
 
 
@@ -102,7 +106,7 @@ interface IManagedRepository {
     + deleteById(int id): void
     + deleteAll(List<int>? ids): void
     + update(int id,List<String> keys, List<Object> values): void
-    + getCount(int id, Duration? time): void
+    + getCount(int id, Periode? time): void
 }
 
 
@@ -141,7 +145,7 @@ class Bill{
 
 Tenant "1..n" o-- "1..n" Bill: make >
 Tenant "1..n"  *-down- "1..n" BankCard: > owns
-Bill <|.left. IDocumentToolkit
+Bill .left.|> IDocumentToolkit:  > implement
 
 interface IBillRepository{
     + add(Bill bill): void
@@ -150,7 +154,7 @@ interface IBillRepository{
 
 
 IManagedRepository <.. IBillRepository: < depend on
-IBillRepository <.left. Bill : < depend on
+IBillRepository <|.left. Bill : < depend on
 
 
 class RentReceipt{
@@ -172,7 +176,7 @@ IRentReceiptInterface <|.. RentReceipt : < depends on
 
     
 
-Rent   <|.up. IDocumentToolkit : control < 
+Rent  .up.|> IDocumentToolkit : control < 
 
 
 class Debts{
@@ -225,7 +229,6 @@ enum RENTTYPE{
 
 
 IManagedRepository <|.. IReport : < depend on
-Report <|.up. IReport : < depend on
 
 
 Tenant "1..1"  -up- "1..1" Rent : hold > 
@@ -287,13 +290,16 @@ interface IAppointmentRepository{
 }
 
 
-Appartment o-up- Appointment : < arranged on
 
-Appointment <|.up. IAppointmentRepository: depond on >
-IAppointmentRepository ..> IManagedRepository :  depnd on >
+Appartment "1..1" o-up- "1..1" Appointment : < arranged on
+Appointment .up.|> IAppointmentRepository: depond on >
+IAppointmentRepository ..|> IManagedRepository :  depnd on >
+
 
 
 'Graphs
+
+
 
 enum ChartEnum{
     LINECHART
@@ -336,7 +342,7 @@ interface IPredictionRepository{
     add(Prediction prediction): void
 }
 
-IManagedRepository <.up. IPredictionRepository: < depend on 
+IManagedRepository <|.up. IPredictionRepository: < depend on 
 IPredictionRepository <|.. Prediction : < depend on 
 
 Chart "1..1" *-up- "0..1" Prediction: > associate

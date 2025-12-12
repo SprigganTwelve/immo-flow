@@ -6,7 +6,7 @@ actor Landlord
 
 
 rectangle "Analytics Management"{
-    ( View KPI) as USG
+    usecase "View KPI (Key Performance Indicators)" as USG
     ( View payement statistics) as US1
 
     'number of rent made per day along the 30 past days
@@ -26,11 +26,13 @@ rectangle "Analytics Management"{
 }
 
 
+
 Landlord --> USG
 Landlord --> US1
 Landlord --> US2
 Landlord --> US3
 Landlord --> US11
+
 
 'payement
 
