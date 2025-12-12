@@ -4,7 +4,9 @@ top to bottom direction
 
 title <b><size:30>&#160;&#160; Class Diagram (Atomic Architecture) &#160;&#160;</size></b>
 
-'-----------Main--------------
+'========================================
+'Main
+'========================================
 
 class Person{
     - id: String
@@ -24,10 +26,15 @@ interface ILandlordRepositiory{
 }
 
 Landlord "1..1" *-- "1..n" Tenant       : > holds  
-ILandlordRepositiory <|.right. Landlord : depend on
+ILandlordRepositiory <.right. Landlord : depend on
 
 
+
+'========================================
 'Documents
+'========================================
+
+
 abstract class AbstractDocumentTemplate {
     - id: Number
     - page: HTMLDocument
@@ -43,7 +50,9 @@ interface IDocumentToolkit{
 }
 
 
-AbstractDocumentTemplate <|.. IDocumentToolkit
+IDocumentToolkit <|.up. AbstractDocumentTemplate : implements
+
+
 
 interface IDocumentTemplateRepository{
     add(Template template): void
@@ -71,8 +80,10 @@ IDocumentToolkit <|.. Report : < implement
 
 
 
+'========================================
+'Tenants
+'========================================
 
-'----------------------Tenants----------------
 
 class Tenant {}
 
@@ -122,8 +133,9 @@ ITenantRepository .up.|> IManagedRepository : depend on >
 ITenantRepository <|.down. Tenant: < depend on
 
 
-'---------Billings--------------------
-
+'========================================
+'Billings
+'========================================
 
 
 class BankCard{
@@ -154,7 +166,7 @@ interface IBillRepository{
 
 
 IManagedRepository <.. IBillRepository: < depend on
-IBillRepository <|.left. Bill : < depend on
+IBillRepository <-left- Bill : < depend on
 
 
 class RentReceipt{
@@ -172,7 +184,7 @@ interface IRentReceiptInterface{}
 
 
 IManagedRepository <|.right. IRentReceiptInterface : <depend on
-IRentReceiptInterface <|.. RentReceipt : < depends on
+IRentReceiptInterface <-- RentReceipt : < depends on
 
     
 
@@ -190,7 +202,11 @@ Tenant "1..1" o-up- "1..n" Debts:  > has
 Debts "1..1" -right-> "1..1" Bill: > relate to 
 
 
-'----------------------Rents------------------------
+
+'========================================
+'Rents
+'========================================
+
 
 
 class Rent{
@@ -235,11 +251,13 @@ Tenant "1..1"  -up- "1..1" Rent : hold >
 TenantGroup --o Rent : hold > 
 
 Rent "1..1" o-right- "1..1" Report : create >
-Rent .left.|> IRentRepository      : depend on >
+Rent -left-> IRentRepository      : depend on >
 
 
+'========================================
+'Apartements
+'========================================
 
-'--------------------Apartements--------------------------
 
 
 class Appartment{
@@ -262,15 +280,16 @@ interface IAppartementRepository{
 
 
 IManagedRepository  <|.left. IAppartementRepository: < depend on
-IAppartementRepository <|.. Appartment : < depend on
+IAppartementRepository <-- Appartment : < depend on
 
 Appartment "1..1" <-right- "1..1" Rent : has <
 Appartment "0..n" <-up- "1..1" Landlord:  possesses/view
 
 
 
-
-'--------------------------Buying/Selling------------------------
+'========================================
+'Buying/Selling
+'========================================
 
 
 
@@ -292,12 +311,14 @@ interface IAppointmentRepository{
 
 
 Appartment "1..1" o-up- "1..1" Appointment : < arranged on
-Appointment .up.|> IAppointmentRepository: depond on >
+Appointment -up-> IAppointmentRepository: depond on >
 IAppointmentRepository ..|> IManagedRepository :  depnd on >
 
 
 
+'========================================
 'Graphs
+'========================================
 
 
 
@@ -343,13 +364,14 @@ interface IPredictionRepository{
 }
 
 IManagedRepository <|.up. IPredictionRepository: < depend on 
-IPredictionRepository <|.. Prediction : < depend on 
+IPredictionRepository <-- Prediction : < depend on 
 
 Chart "1..1" *-up- "0..1" Prediction: > associate
 
 
-
-'--------------------2D/3D Graphics Models--------------------
+'========================================
+'2D/3D Graphics Models
+'========================================
 
 
 class CompressedFile{

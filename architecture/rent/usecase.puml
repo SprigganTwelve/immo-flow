@@ -1,73 +1,116 @@
 @startuml
 
-    left to right direction
+left to right direction
 
-    skinparam rectanglePadding 5
-    skinparam usecasePadding 5
-    skinparam rectangleMargin 10
+skinparam rectanglePadding 10
+skinparam usecasePadding 8
+skinparam rectangleMargin 15
 
-    actor Landlord
-    
+actor Landlord
 
-    rectangle "Rent management"  {
-        (Assign apartment to tenant) as US1
-        
-        (Enter the payment details) as US11
-        (Enter the tenants information) as US12
-        (Define type of rental)     as US13
-        
-        (Delete rent) as US2
-        (Validate Cancelling rental) as US21
-        
-        (view all rent) as US3
-        (view tenants)  as US31
-        (Access the contract) as US32
-        
-        (Billing tenant) as US4
-        (Create invoice for tenants) as US41
-        (Send Bill to tenants) as US42
-        
-        
-        (Generate rental report) as US5
-        (Sent rental report to client) as US51
-        (View rental report line chart) as US52
+rectangle "Rent Management" {
 
-        (view payment trend chart)  as US6
-        (view rent trend chart)     as US7
-        
-        /'() as US5'/
+    rectangle "General" {
+        (Print Document) as USG1
+        (Create template) as USG2
     }
 
-    Landlord -> US1
-    US1 ..> US11 : <<include>>
-    US1 ..> US12 : <<include>>
-    US1 ..> US13 : <<include>>
-    
-    
-    Landlord --> US2
-    US2 ..> US21 : <<include>>
-    
-    Landlord -> US3
-    Landlord --> US31
-    US3 <.left. US31 : <<extends>>
-    US3 <.. US32     : <<extends>>
+    rectangle "Assign Apartment" {
+        (Assign apartment to tenant) as US1
+        (Enter the payment details) as US11
+        (Enter the tenants information) as US12
+        (Define type of rental) as US13
+    }
+
+    rectangle "Delete Rent" {
+        (Delete rent) as US2
+        (Validate Cancelling rental) as US21
+    }
+
+    rectangle "View Rent" {
+        (View all rents) as US3
+        (View a particular rent) as US31
+        (Access the contract) as US32
+        usecase "View associated tenant(s)" as US34
+    }
+
+    rectangle "Billing" {
+        (Billing tenant) as US4
+        (Create invoice for tenant) as US41
+        (Send bill to tenant) as US42
+    }
+
+    rectangle "Reporting" {
+        (Generate rental report) as US5
+        (Send rental report to client) as US51
+        (View rental report line chart) as US52
+    }
+
+    rectangle "Analytics" {
+        (View trend chart) as US6
+    }
+}
+
+
+'========================================
+' Assign Apartment
+'========================================
+
+
+Landlord -up-> US1
+US1 ..> US11 : <<include>>
+US1 ..> US12 : <<include>>
+US1 ..> US13 : <<include>>
 
 
 
-    Landlord -> US4
-    US4 <.. US41 : <<extends>>
-    US4 <.. US42 : <<extends>>
+'========================================
+' Delete Rent
+'========================================
 
-    Landlord ->  US5
-    US5 <..  US51: <<extends>>
-    US5 <..  US52: <<extends>>
-    
-    Landlord -> US6
-    Landlord -> US7
 
-    US6 <.left. US7 
-    US7 <.left. US6 : <<extends>>
-    
+Landlord --> US2
+US2 ..> US21 : <<include>>
 
-    
+'========================================
+' View Rent
+'========================================
+
+
+Landlord --> US3
+US31 <.right. US3  : <<extends>>
+US32 <.up. US31 : <<extends>>
+US31 ..> US34 : <<include>>
+
+
+'========================================
+' Billing
+'========================================
+
+
+Landlord --> US4
+US41 <.. US4 : <<extends>>
+US42 <.. US4 : <<extends>>
+US4 ..> USG1 : <<include>>
+USG1 ..> USG2 : <<include>>
+
+
+'========================================
+' Reporting
+'========================================
+
+
+Landlord -down-> US5
+US5 ..> USG1 : <<include>>
+US51 <.. US5 : <<extends>>
+US52 <.. US5 : <<extends>>
+
+
+'========================================
+' Analytics
+'========================================
+
+
+Landlord -up-> US6
+
 @enduml

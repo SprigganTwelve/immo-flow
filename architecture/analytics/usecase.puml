@@ -21,7 +21,7 @@ rectangle "Analytics Management"{
     
     ( merge statistics data ) as US8
     ( separate statistics data ) as US9
-    ( update statistics  )  as  US10
+    ' ( update statistics  )  as  US10
     ( Generate prediction ) as US11
 }
 
@@ -31,7 +31,6 @@ Landlord --> USG
 Landlord --> US1
 Landlord --> US2
 Landlord --> US3
-Landlord --> US11
 
 
 'payement
@@ -54,9 +53,10 @@ US3 <.. US5 : <<extends>
 
 US4 <.. US8: <<extends>>
 US4 <.. US9: <<extends>>
-' US4 <.. US10: <<extends>>
+US4 <.. US11: <<extends>>
 
 
+US5 <.. US11: <<extends>>
 US5 <.. US8: <<extends>>
 US5 <.. US9: <<extends>>
 ' US5 <.. US10: <<extends>>
