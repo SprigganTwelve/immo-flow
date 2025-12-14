@@ -6,17 +6,25 @@ skinparam actorStyle awesome
 actor UI
 
 participant "TenantDomain" as Domain
-participant "EmailDomain" as EmailDomain
+participant "AuthDomain" as AuthDomain
 participant "AuthService" as Auth
+participant "EmailDomain" as EmailDomain
 participant "EmailService" as Email
 participant "TenantRepository" as Repo
 database "Database" as DB
 
+
+
 UI -> Domain : delete(id, token)
 activate Domain
 
-Domain -> Auth : validateAuth(token)
+
+Domain -> AuthDomain : authorize(token)
+activate AuthDomain
+
+AuthDomain -> Auth: validate(token)
 activate Auth
+
 
 note right of Auth
   - token valid
@@ -26,9 +34,15 @@ note right of Auth
   - failed attempts < 3
 end note
 
+Auth --> AuthDomain: reponse
+deactivate Auth
+
+
 alt authorized
-    Auth --> Domain : authorized
+
+    AuthDomain --> Domain : authorized
     deactivate Auth
+    deactivate AuthDomain
 
     Domain -> Repo : deleteTenant(id)
     activate Repo

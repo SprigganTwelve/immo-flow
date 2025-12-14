@@ -1,0 +1,17 @@
+@startuml 
+
+
+title "Diagram Of Sequence: Assign appartment"
+
+participant "U I"               as UI
+participant "RentDomain"        as Domain  
+participant "AuthDomain"       as Auth
+participant "AuthService"       as Auth
+participant "EmailService"      as Email
+participant "Tenant"            as TenantClass
+participant "TenantRepositiory" as TenantRepositiory
+database  DB
+
+
+
+@enduml

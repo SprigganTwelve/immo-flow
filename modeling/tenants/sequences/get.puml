@@ -5,16 +5,25 @@ skinparam actorStyle awesome
 actor UI
 
 participant "TenantDomain" as TenantDomain
-participant "EamilDomain"  as EmailDomain
+participant "AuthDomain" as AuthDoamin
 participant "AuthService" as Auth
+participant "EamilDomain"  as EmailDomain
 participant "EmailService" as Email
 participant "TenantRepository" as TenantRepo
 database "BDD" as BDD
 
+
+
+
 UI -> TenantDomain : retrieveTenants()
 activate TenantDomain
 
-TenantDomain -> Auth : checkAuthentication()
+
+
+TenantDomain -> AuthDoamin : checkAuthentication(token)
+activate AuthDoamin
+
+AuthDoamin -> Auth : validate (token)
 activate Auth
 
 note right of Auth
@@ -24,27 +33,40 @@ note right of Auth
   - failed attempts < 4
 end note
 
+Auth --> AuthDoamin: response
+deactivate Auth
+
+
+
 alt authenticated
-    Auth --> TenantDomain : authenticated
-    deactivate Auth
+
+    AuthDoamin --> TenantDomain : authenticated
+    deactivate AuthDoamin
+
 
     TenantDomain -> TenantRepo : findAll / findOne()
     activate TenantRepo
+
 
     TenantRepo -> BDD : SELECT tenant(s)
     activate BDD
     BDD --> TenantRepo : tenant(s)
     deactivate BDD
 
+
     TenantRepo --> TenantDomain : tenant(s)
     deactivate TenantRepo
+
 
     TenantDomain --> UI : tenants list
     deactivate TenantDomain
 
+
 else authentication failed
+
     Auth --> TenantDomain : rejected
     deactivate Auth
+
 
     TenantDomain -> TenantRepo : logFailure()
     activate TenantRepo
@@ -52,8 +74,10 @@ else authentication failed
     activate BDD
     BDD --> TenantRepo : ok
     deactivate BDD
+
     TenantRepo --> TenantDomain: ok
     deactivate TenantRepo
+
 
     TenantDomain -> EmailDomain : send warning email
     ref over EmailDomain
@@ -61,8 +85,10 @@ else authentication failed
     end ref
     EmailDomain --> TenantDomain: ok
 
+
     TenantDomain --> UI : warning / error
     deactivate TenantDomain
+
 end
 
 

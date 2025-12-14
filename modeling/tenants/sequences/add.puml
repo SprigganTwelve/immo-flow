@@ -1,10 +1,11 @@
 @startuml
-title "Sequence Diagram: Add Tenant"
+title "Sequence Diagram: Add Tenant (DDD)"
 
 skinparam actorStyle awesome
 actor UI
 
-participant "Domain" as Domain
+participant "TenantDomain" as Domain
+participant "AuthDomain" as AuthDomain
 participant "EmailDomain" as EmailDomain
 participant "AuthService" as Auth
 participant "Tenant" as TenantClass
@@ -21,7 +22,10 @@ activate Domain
 '====================
 ' Authorization
 '====================
-Domain -> Auth : validate(token)
+Domain -> AuthDomain : authorize(token)
+activate AuthDomain
+
+AuthDomain -> Auth : validate(token)
 activate Auth
 
 note right of Auth
@@ -31,10 +35,14 @@ note right of Auth
   - failed attempts < 2
 end note
 
+Auth --> AuthDomain : reponse
+
 
 alt authorized
-    Auth --> Domain : authorized
     deactivate Auth
+    AuthDomain --> Domain : authorized
+    deactivate AuthDomain
+
 
     '====================
     ' Validation

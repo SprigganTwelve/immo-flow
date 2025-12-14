@@ -7,9 +7,10 @@ skinparam actorStyle awesome
 actor "U I" as UI
 
 participant "TenantGroupDomain" as Domain 
-participant "EmailDomain"  as EmailDomain 
 
+participant "AuthDomain" as  AuthDomain
 participant "AuthServices" as  Auth
+participant "EmailDomain"  as EmailDomain 
 participant "TenantGroup"  as  Group
 participant "TenantGroupRepository" as Repo 
 database "Database" as DB
@@ -17,8 +18,11 @@ database "Database" as DB
 
 UI     -> Domain:  createGroup(ids, leader)
 activate  Domain
-Domain -> Auth : validateAuth(token) 
 
+Domain -> AuthDomain : authorize(token) 
+activate AuthDomain
+
+AuthDomain -> Auth : validate(token)
 
 activate Auth
 note right of Auth
@@ -28,13 +32,13 @@ note right of Auth
   - failed attempts < 4
 end note
 
-
-
+Auth --> AuthDomain : response
+deactivate Auth
 
 
 alt Authorized
-    Auth   -->  Domain : ok
-    deactivate Auth
+    AuthDomain   -->  Domain : ok
+    deactivate AuthDomain
 
     Domain ->  Group  : <<create>>
     note over Group
