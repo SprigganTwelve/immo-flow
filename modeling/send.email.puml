@@ -1,0 +1,39 @@
+@startuml
+
+participant Domain
+participant EmailDomain
+participant EmailService
+database DB
+
+Domain -> EmailDomain: Send warning email
+activate EmailDomain
+
+
+EmailDomain -> EmailService : getLastEmailServiceServiceSentAt(userId)
+activate EmailService
+EmailService --> EmailDomain: timestamp
+deactivate EmailService
+
+
+EmailDomain -> EmailDomain : computeDateDiff()
+
+alt dateDiff > 2 days
+    EmailDomain -> EmailService : sendWarningEmailService(id)
+    activate EmailService
+
+    EmailService -> DB : INSERT email
+    activate DB
+    DB --> EmailService : ok
+    deactivate DB
+
+    EmailService --> EmailDomain: ok
+    deactivate EmailService
+
+    EmailDomain --> Domain : ok
+    deactivate EmailDomain
+
+end
+
+
+
+@enduml

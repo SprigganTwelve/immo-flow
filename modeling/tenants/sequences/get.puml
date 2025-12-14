@@ -1,0 +1,69 @@
+@startuml
+title "Sequence Diagram: Retrieve Tenant(s)"
+
+skinparam actorStyle awesome
+actor UI
+
+participant "TenantDomain" as TenantDomain
+participant "EamilDomain"  as EmailDomain
+participant "AuthService" as Auth
+participant "EmailService" as Email
+participant "TenantRepository" as TenantRepo
+database "BDD" as BDD
+
+UI -> TenantDomain : retrieveTenants()
+activate TenantDomain
+
+TenantDomain -> Auth : checkAuthentication()
+activate Auth
+
+note right of Auth
+  - check token
+  - check policy
+  - check permissions
+  - failed attempts < 4
+end note
+
+alt authenticated
+    Auth --> TenantDomain : authenticated
+    deactivate Auth
+
+    TenantDomain -> TenantRepo : findAll / findOne()
+    activate TenantRepo
+
+    TenantRepo -> BDD : SELECT tenant(s)
+    activate BDD
+    BDD --> TenantRepo : tenant(s)
+    deactivate BDD
+
+    TenantRepo --> TenantDomain : tenant(s)
+    deactivate TenantRepo
+
+    TenantDomain --> UI : tenants list
+    deactivate TenantDomain
+
+else authentication failed
+    Auth --> TenantDomain : rejected
+    deactivate Auth
+
+    TenantDomain -> TenantRepo : logFailure()
+    activate TenantRepo
+    TenantRepo -> BDD : INSERT security log
+    activate BDD
+    BDD --> TenantRepo : ok
+    deactivate BDD
+    TenantRepo --> TenantDomain: ok
+    deactivate TenantRepo
+
+    TenantDomain -> EmailDomain : send warning email
+    ref over EmailDomain
+            Send warning email  to landlord
+    end ref
+    EmailDomain --> TenantDomain: ok
+
+    TenantDomain --> UI : warning / error
+    deactivate TenantDomain
+end
+
+
+@enduml

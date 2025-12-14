@@ -8,7 +8,7 @@ title <b><size:30>&#160;&#160; Class Diagram (Atomic Architecture) &#160;&#160;<
 'Main
 '========================================
 
-class Person{
+abstract class Person{
     - id: String
     - firstName: String
     - lastName: String
@@ -16,27 +16,49 @@ class Person{
     - address: String
     - createDate: DateTime
     - updateDate: DateTime
+
+    + getName(): String
+    _+ checkJsonCompliance(Map json): boolean
+    _+ checkFormDataCompliance(FormData data): boolean
+    _+ checkCustomeInstanceCompliance(CustomObject data): boolean
 }
+
+
+interface ILandlordRepository{}
+
+class AuthServices{}
+
+AuthServices "1..1" -up-* "1..n" Landlord
+AuthServices "1..1" --> "1..1" ILandlordRepository
+ILandlordRepository ..|> IManagedRepository
+
+
+
+interface IManagedRepository {
+    + getAll(): void
+    + getById(int id): void
+    + deleteById(int id): void
+    + deleteAll(List<int>? ids): void
+    + update(int id,List<String> keys, List<Object> values): void
+    + getCount(int id, Periode? time): void
+}
+
 
 
 Class Landlord{}
-interface ILandlordRepositiory{
-    + login(int id) : Token
-    + logout(int id): void
-}
-
 
 
 Landlord "1..1" *-- "1..n" Tenant       : > holds  
-ILandlordRepositiory <.right. Landlord : depend on
 
 
 class CognitiveAgent {
     + ask(String str): String
 }
 
-Landlord *-up- CognitiveAgent : > ask
-CognitiveAgent -- Prediction
+
+Landlord *-- CognitiveAgent : > ask
+CognitiveAgent -down- Prediction : > produce
+
 
 'Global user of any external service as AI or Templating
     abstract class Engine{
@@ -45,6 +67,8 @@ CognitiveAgent -- Prediction
         - description?: String
         + generateDocument(TemplateDocument template): Document
     }
+
+
 
 
 
@@ -81,7 +105,7 @@ interface IDocumentToolkit{
 }
 
 
-IDocumentToolkit <|.up. AbstractTemplateDocument : implements
+IDocumentToolkit <|.up. AbstractTemplateDocument : > implements
 
 
 
@@ -117,31 +141,33 @@ Person <|-- Tenant
 
 class TenantGroup{
     - responsableId : int
-    + generateBill(): void
+
+    + generateBill() : void
+    + checkIdsArrays(): boolean
 }
 
 
 interface ITenantGroupRepository{
     + add(TenantGroup group): void
-    + dispatchBill(): void
+    ' + dispatchBill(): void
 }
+
+
+Tenant "1..n" *-- "1..1" EmailServices : < deal with
+
+class Email{}
+class EmailServices{
+    + sendWarningEmail(AbstractEmail): void
+}
+
+
+EmailServices --> Email
 
 
 IManagedRepository <|.. ITenantGroupRepository : < depend on
 ITenantGroupRepository <|.. TenantGroup        : < depend on
 
 Tenant "1..n" *-left- "1..1" TenantGroup : > compose
-
-
-
-interface IManagedRepository {
-    + getAll(): void
-    + getById(int id): void
-    + deleteById(int id): void
-    + deleteAll(List<int>? ids): void
-    + update(int id,List<String> keys, List<Object> values): void
-    + getCount(int id, Periode? time): void
-}
 
 
 
@@ -154,6 +180,8 @@ interface ITenantRepository{
 
 ITenantRepository .up.|> IManagedRepository : depend on >
 ITenantRepository <|.down. Tenant: < depend on
+
+
 
 
 '========================================
@@ -298,7 +326,6 @@ interface IAppartementRepository{
     + delegate(int id): void
     + saveContract(File file): void
     + incorporateAppartment(int id) : void
-    + setInRepair(boolean bool): void
 }
 
 

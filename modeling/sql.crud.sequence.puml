@@ -1,0 +1,29 @@
+@startuml
+
+
+participant Landlord
+participant Repository
+participant BDD
+
+group BDDTransaction
+    alt valid data
+
+        Repository -> BDD : <<BDD_OPERATION>>
+        activate BDD
+        BDD --> Repository : <<RESPONSE>>
+        deactivate BDD
+
+        alt delete ok
+            Repository --> Landlord : successful response
+        else delete failed
+            Repository --> Landlord : please retry REQUEST
+        end
+
+        else invalid data
+            Repository --> Landlord : please retry data validation
+    end
+end
+
+deactivate Repository
+
+@enduml

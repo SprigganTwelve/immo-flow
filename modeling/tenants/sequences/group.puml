@@ -1,0 +1,81 @@
+
+@startuml
+
+title "Diagram of sequence: Group Tenant "
+
+skinparam actorStyle awesome
+actor "U I" as UI
+
+participant "TenantGroupDomain" as Domain 
+participant "EmailDomain"  as EmailDomain 
+
+participant "AuthServices" as  Auth
+participant "TenantGroup"  as  Group
+participant "TenantGroupRepository" as Repo 
+database "Database" as DB
+
+
+UI     -> Domain:  createGroup(ids, leader)
+activate  Domain
+Domain -> Auth : validateAuth(token) 
+
+
+activate Auth
+note right of Auth
+  - check token
+  - check policy
+  - check permissions
+  - failed attempts < 4
+end note
+
+
+
+
+
+alt Authorized
+    Auth   -->  Domain : ok
+    deactivate Auth
+
+    Domain ->  Group  : <<create>>
+    note over Group
+        Creating an instance of TenantGroup fail
+        depending on whether the user IDs were set correctly
+    end note
+
+    alt Instance created
+        Group --> Domain  : ok
+
+        Domain -> Repo : save(ids)
+        activate Repo
+
+        Repo -> DB:  INSERT tenant_group
+        activate DB
+        DB --> Repo: ok
+        deactivate DB
+
+        Repo --> Domain: ok
+        deactivate Repo
+        Domain --> UI: group created / sucess
+
+        else  Failed
+            Group  --> Domain: Failed to create instance
+            Domain --> UI :  error
+    end
+
+
+    else Unauthorized
+
+        Domain -> EmailDomain : sendWarning
+
+        ref over EmailDomain
+            Send warning email  to landlord
+        end ref
+
+        EmailDomain --> Domain: ok
+        Domain --> UI : Unauthorized action
+        deactivate Domain
+end
+
+
+
+@enduml

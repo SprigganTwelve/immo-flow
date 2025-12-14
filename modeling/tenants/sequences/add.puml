@@ -1,0 +1,113 @@
+@startuml
+title "Sequence Diagram: Add Tenant"
+
+skinparam actorStyle awesome
+actor UI
+
+participant "Domain" as Domain
+participant "EmailDomain" as EmailDomain
+participant "AuthService" as Auth
+participant "Tenant" as TenantClass
+participant "TenantRepository" as Repo
+participant "EmailService" as Email
+participant "tenant : Tenant" as Tenant
+database "BDD" as DB
+
+
+UI -> Domain : insert(entrant, token)
+activate Domain
+
+
+'====================
+' Authorization
+'====================
+Domain -> Auth : validate(token)
+activate Auth
+
+note right of Auth
+  - token valid
+  - permissions ok
+  - host not blacklisted
+  - failed attempts < 2
+end note
+
+
+alt authorized
+    Auth --> Domain : authorized
+    deactivate Auth
+
+    '====================
+    ' Validation
+    '====================
+    Domain -> TenantClass : validate(entrant)
+    TenantClass --> Domain: ok
+
+    note right of TenantClass
+      - checkRequiredFields()
+      - checkFieldFormat()
+    end note
+
+
+
+    alt valid data
+        '====================
+        ' Create Tenant
+        '====================
+        Domain -> TenantClass : <<create>>
+        TenantClass --> Domain : instance
+
+        Domain -> Repo : save(Tenant)
+        activate Repo
+
+        Repo -> DB : INSERT tenant
+        activate DB
+        DB --> Repo : ok
+        deactivate DB
+
+        alt insert ok
+            Repo --> Domain : success
+            Domain --> UI : successful response
+        else insert failed
+            Repo --> Domain : failure
+            Domain --> UI : please retry
+        end
+
+        deactivate Repo
+
+    else invalid data
+        Domain --> UI : validation error
+    end
+
+
+else unauthorized
+    Auth --> Domain : rejected
+    deactivate Auth
+
+    '====================
+    ' Security log
+    '====================
+    Domain -> Repo : logSecurityFailure()
+    activate Repo
+    Repo -> DB : INSERT security_log
+    activate DB
+    DB --> Repo : ok
+    deactivate DB
+    Repo --> Domain: ok
+    deactivate Repo
+
+
+    '====================
+    ' Notification
+    '====================
+
+    Domain -> EmailDomain : sendWarning
+    ref over EmailDomain
+            Send warning email  to landlord
+    end ref
+    EmailDomain --> Domain: ok
+
+    Domain --> UI : <<warning>> unauthorized request
+end
+
+deactivate Domain
+@enduml

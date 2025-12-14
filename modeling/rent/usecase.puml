@@ -1,12 +1,18 @@
 @startuml
 
+
+
 left to right direction
+
 
 skinparam rectanglePadding 10
 skinparam usecasePadding 8
 skinparam rectangleMargin 15
 
+
 actor Landlord
+
+
 
 rectangle "Rent Management" {
 
@@ -52,15 +58,18 @@ rectangle "Rent Management" {
 }
 
 
+
 '========================================
 ' Assign Apartment
 '========================================
 
 
+
 Landlord -up-> US1
-US1 ..> US11 : <<include>>
+US1 <.. US11 : <<include>>
 US1 ..> US12 : <<include>>
-US1 ..> US13 : <<include>>
+US1 <.. US13 : <<extends>>
+
 
 
 
@@ -69,8 +78,11 @@ US1 ..> US13 : <<include>>
 '========================================
 
 
+
 Landlord --> US2
 US2 ..> US21 : <<include>>
+
+
 
 '========================================
 ' View Rent
@@ -88,6 +100,7 @@ US31 ..> US34 : <<include>>
 '========================================
 
 
+
 Landlord --> US4
 US41 <.. US4 : <<extends>>
 US42 <.. US4 : <<extends>>
@@ -95,9 +108,11 @@ US4 ..> USG1 : <<include>>
 USG1 ..> USG2 : <<include>>
 
 
+
 '========================================
 ' Reporting
 '========================================
+
 
 
 Landlord -down-> US5

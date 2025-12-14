@@ -25,6 +25,7 @@ rectangle "Tenants management" {
     'Group
     usecase "Gather tenants into group" as US6
     usecase "Select leader/responsable" as US61
+    
 }
 
 
