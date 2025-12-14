@@ -6,6 +6,7 @@ actor UI
 
 participant "TenantDomain" as Domain
 participant "AuthDomain" as AuthDomain
+participant "LogDomain" as SecurityLog
 participant "EmailDomain" as EmailDomain
 participant "AuthService" as Auth
 participant "Tenant" as TenantClass
@@ -22,6 +23,7 @@ activate Domain
 '====================
 ' Authorization
 '====================
+
 Domain -> AuthDomain : authorize(token)
 activate AuthDomain
 
@@ -33,6 +35,8 @@ note right of Auth
   - permissions ok
   - host not blacklisted
   - failed attempts < 2
+  (work with LogDomain)
+  ect...
 end note
 
 Auth --> AuthDomain : reponse
@@ -94,14 +98,20 @@ else unauthorized
     '====================
     ' Security log
     '====================
-    Domain -> Repo : logSecurityFailure()
-    activate Repo
-    Repo -> DB : INSERT security_log
-    activate DB
-    DB --> Repo : ok
-    deactivate DB
-    Repo --> Domain: ok
-    deactivate Repo
+        Domain -> SecurityLog : logFailure()
+        activate SecurityLog
+        
+        SecurityLog -> Repo : insertSecurityLog()
+        activate Repo
+
+        Repo -> DB : INSERT security_log
+        activate DB
+        DB --> Repo : response
+        deactivate DB
+
+        Repo --> SecurityLog : ok
+        SecurityLog --> Domain
+        deactivate SecurityLog
 
 
     '====================

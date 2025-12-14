@@ -24,6 +24,12 @@ abstract class Person{
 }
 
 
+class AuthServices{
+    + validate(): void
+}
+
+Landlord <- AuthServices : < athenticate
+
 interface ILandlordRepository{}
 
 class AuthServices{}

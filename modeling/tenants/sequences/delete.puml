@@ -1,16 +1,17 @@
 @startuml
-
-title "DELETE TENANT"
+title "Sequence Diagram: Delete Tenant"
 
 skinparam actorStyle awesome
 actor UI
 
 participant "TenantDomain" as Domain
 participant "AuthDomain" as AuthDomain
-participant "AuthService" as Auth
+participant "AuthService" as AuthService
+participant "SecurityDomain" as SecurityDomain
+participant "LogDomain" as LogDomain
+participant "LogRepository" as LogRepo
 participant "EmailDomain" as EmailDomain
-participant "EmailService" as Email
-participant "TenantRepository" as Repo
+participant "TenantRepository" as TenantRepo
 database "Database" as DB
 
 
@@ -19,77 +20,91 @@ UI -> Domain : delete(id, token)
 activate Domain
 
 
+
 Domain -> AuthDomain : authorize(token)
 activate AuthDomain
 
-AuthDomain -> Auth: validate(token)
-activate Auth
 
 
-note right of Auth
-  - token valid
-  - policy ok
-  - permissions ok
-  - host not blacklisted
-  - failed attempts < 3
+AuthDomain -> AuthService : validate(token)
+activate AuthService
+
+
+
+note right of AuthService
+  - validate token
+  - decode claims
+  - verify signature
 end note
 
-Auth --> AuthDomain: reponse
-deactivate Auth
+
+AuthService --> AuthDomain : authResult
+deactivate AuthService
 
 
-alt authorized
+
+
+alt Authorize
 
     AuthDomain --> Domain : authorized
-    deactivate Auth
     deactivate AuthDomain
 
-    Domain -> Repo : deleteTenant(id)
-    activate Repo
-    Repo -> DB : DELETE tenant
+    Domain -> TenantRepo : terminateTenant(id)
+    activate TenantRepo
+
+    TenantRepo -> DB : UPDATE tenant status
     activate DB
-    DB --> Repo : ok
+    DB --> TenantRepo : ok
     deactivate DB
 
-    alt delete ok
-        Repo --> Domain : success
-        deactivate Repo
+    alt termination ok
+        TenantRepo --> Domain : success
         Domain --> UI : success
-    else delete failed
-        Repo --> Domain : failure
+    else termination failed
+        TenantRepo --> Domain : failure
         Domain --> UI : failed
     end
-    deactivate Repo
 
-else unauthorized
-    Auth --> Domain : rejected
-    deactivate Auth
+    deactivate TenantRepo
 
-    '====================
-    ' Security log
-    '====================
-    Domain -> Repo : logSecurityFailure()
-    activate Repo
-    Repo -> DB : INSERT security_log
+
+else Unauthorized
+
+    AuthDomain --> Domain : rejected
+    deactivate AuthDomain
+
+    Domain -> SecurityDomain : handleAuthFailure(context)
+    activate SecurityDomain
+
+    SecurityDomain -> LogDomain : recordUnauthorizedAccess()
+    activate LogDomain
+
+    LogDomain -> LogRepo : save(event)
+    activate LogRepo
+
+    LogRepo -> DB : INSERT security_log
     activate DB
-    DB --> Repo : ok
+    DB --> LogRepo : ok
     deactivate DB
-    Repo --> Domain: ok
-    deactivate Repo
 
-    '====================
-    ' Notification
-    '====================
+    LogRepo --> LogDomain : ok
+    deactivate LogRepo
 
-    Domain -> EmailDomain : sendWarning
+    LogDomain --> SecurityDomain : recorded
+    deactivate LogDomain
+
+    SecurityDomain -> EmailDomain : sendWarningIfNeeded()
     ref over EmailDomain
-            Send warning email  to landlord
+        Send warning email to landlord
     end ref
-    EmailDomain --> Domain: ok
+
+    EmailDomain --> SecurityDomain : sent
+    SecurityDomain --> Domain : handled
+    deactivate SecurityDomain
 
     Domain --> UI : <<warning>> unauthorized request
+    
 end
 
 deactivate Domain
-
 @enduml

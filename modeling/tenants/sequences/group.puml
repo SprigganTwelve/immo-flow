@@ -1,85 +1,117 @@
-
 @startuml
-
-title "Diagram of sequence: Group Tenant "
+title "Sequence Diagram: Create Tenant Group"
 
 skinparam actorStyle awesome
-actor "U I" as UI
+actor UI
 
-participant "TenantGroupDomain" as Domain 
+participant "TenantGroupDomain"   as Domain
+participant "AuthDomain"          as AuthDomain
+participant "AuthService"         as AuthService
+participant "SecurityDomain"      as SecurityDomain
+participant "LogDomain"           as LogDomain
+participant "LogRepository"       as LogRepo
+participant "EmailDomain"         as EmailDomain
+participant "TenantGroup"         as Group
+participant "TenantGroupRepository" as Repo
+database "Database"               as DB
 
-participant "AuthDomain" as  AuthDomain
-participant "AuthServices" as  Auth
-participant "EmailDomain"  as EmailDomain 
-participant "TenantGroup"  as  Group
-participant "TenantGroupRepository" as Repo 
-database "Database" as DB
+UI -> Domain : createGroup(ids, leader, token)
+activate Domain
 
-
-UI     -> Domain:  createGroup(ids, leader)
-activate  Domain
-
-Domain -> AuthDomain : authorize(token) 
+'====================
+' Authorization
+'====================
+Domain -> AuthDomain : authorize(token)
 activate AuthDomain
 
-AuthDomain -> Auth : validate(token)
+AuthDomain -> AuthService : validate(token)
+activate AuthService
 
-activate Auth
-note right of Auth
-  - check token
-  - check policy
+note right of AuthService
+  - validate token
   - check permissions
-  - failed attempts < 4
+  - check policy
 end note
 
-Auth --> AuthDomain : response
-deactivate Auth
-
+AuthService --> AuthDomain : authResult
+deactivate AuthService
 
 alt Authorized
-    AuthDomain   -->  Domain : ok
+    AuthDomain --> Domain : authorized
     deactivate AuthDomain
 
-    Domain ->  Group  : <<create>>
+    '====================
+    ' Create group
+    '====================
+    Domain -> Group : <<create>>(ids, leader)
+
     note over Group
-        Creating an instance of TenantGroup fail
-        depending on whether the user IDs were set correctly
+        Creation may fail if:
+        - invalid tenant IDs
+        - leader not in group
     end note
 
-    alt Instance created
-        Group --> Domain  : ok
+    alt Group created
+        Group --> Domain : instance
 
-        Domain -> Repo : save(ids)
+        Domain -> Repo : save(group)
         activate Repo
 
-        Repo -> DB:  INSERT tenant_group
+        Repo -> DB : INSERT tenant_group
         activate DB
-        DB --> Repo: ok
+        DB --> Repo : ok
         deactivate DB
 
-        Repo --> Domain: ok
+        Repo --> Domain : ok
         deactivate Repo
-        Domain --> UI: group created / sucess
 
-        else  Failed
-            Group  --> Domain: Failed to create instance
-            Domain --> UI :  error
+        Domain --> UI : group created
+
+    else Creation failed
+        Group --> Domain : error
+        Domain --> UI : validation error
     end
 
+else Unauthorized
+    AuthDomain --> Domain : rejected
+    deactivate AuthDomain
 
-    else Unauthorized
+    '====================
+    ' Security handling
+    '====================
+    Domain -> SecurityDomain : handleUnauthorizedAccess(context)
+    activate SecurityDomain
 
-        Domain -> EmailDomain : sendWarning
+    SecurityDomain -> LogDomain : recordFailure()
+    activate LogDomain
 
-        ref over EmailDomain
-            Send warning email  to landlord
-        end ref
+    LogDomain -> LogRepo : save(event)
+    activate LogRepo
 
-        EmailDomain --> Domain: ok
-        Domain --> UI : Unauthorized action
-        deactivate Domain
+    LogRepo -> DB : INSERT security_log
+    activate DB
+    DB --> LogRepo : ok
+    deactivate DB
+
+    LogRepo --> LogDomain : ok
+    deactivate LogRepo
+
+    LogDomain --> SecurityDomain : recorded
+    deactivate LogDomain
+
+    '====================
+    ' Notification
+    '====================
+    SecurityDomain -> EmailDomain : sendWarningIfNeeded()
+    ref over EmailDomain
+        Send warning email to landlord
+    end ref
+
+    EmailDomain --> SecurityDomain : sent
+    deactivate SecurityDomain
+
+    Domain --> UI : <<warning>> unauthorized action
 end
 
-
-
+deactivate Domain
 @enduml

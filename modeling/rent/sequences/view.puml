@@ -1,0 +1,85 @@
+@startuml
+title "Sequence Diagram: View Rent"
+
+skinparam actorStyle awesome
+
+participant "UI"                    as UI
+participant "RentDomain"            as Domain
+participant "AuthDomain"            as AuthDomain
+participant "SecurityDomain"        as SecurityDomain
+participant "LogDomain"             as LogDomain
+participant "AuthService"           as AuthService
+participant "EmailDomain"           as EmailDomain
+participant "LogRepository"         as LogRepo
+database  "DB"                      as DB
+
+
+UI -> Domain : viewRent(id, token)
+activate Domain
+
+
+group Authentication
+    Domain -> AuthDomain : authorize(token)
+    activate AuthDomain
+
+    AuthDomain -> AuthService : validate(token)
+    activate AuthService
+
+    note right of AuthService
+      - validate token signature
+      - decode claims
+      - fetch auth context
+    end note
+
+    AuthService --> AuthDomain : authResult
+    deactivate AuthService
+end
+
+
+alt Authorized
+    AuthDomain --> Domain : authorized
+    deactivate AuthDomain
+
+    ' Domain --> UI : rent data
+
+
+else Unauthorized
+    AuthDomain --> Domain : rejected
+    deactivate AuthDomain
+
+    Domain -> SecurityDomain : handleAuthFailure(context)
+    activate SecurityDomain
+
+    SecurityDomain -> LogDomain : recordUnauthorizedAccess(event)
+    activate LogDomain
+
+    LogDomain -> LogRepo : save(event)
+    activate LogRepo
+
+    LogRepo -> DB : INSERT security_log
+    activate DB
+    DB --> LogRepo : ok
+    deactivate DB
+
+    LogRepo --> LogDomain : ok
+    deactivate LogRepo
+
+    LogDomain --> SecurityDomain : recorded
+    deactivate LogDomain
+
+    SecurityDomain -> EmailDomain : sendWarningIfNeeded()
+    
+    ref over EmailDomain
+        Send warning email to landlord
+    end ref
+
+    EmailDomain --> SecurityDomain : sent
+
+    SecurityDomain --> Domain : handled
+    deactivate SecurityDomain
+
+    Domain --> UI : warning message
+end
+
+deactivate Domain
+@enduml

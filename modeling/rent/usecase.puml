@@ -28,10 +28,6 @@ rectangle "Rent Management" {
         (Define type of rental) as US13
     }
 
-    rectangle "Delete Rent" {
-        (Delete rent) as US2
-        (Validate Cancelling rental) as US21
-    }
 
     rectangle "View Rent" {
         (View all rents) as US3
@@ -70,17 +66,6 @@ US1 <.. US11 : <<include>>
 US1 ..> US12 : <<include>>
 US1 <.. US13 : <<extends>>
 
-
-
-
-'========================================
-' Delete Rent
-'========================================
-
-
-
-Landlord --> US2
-US2 ..> US21 : <<include>>
 
 
 

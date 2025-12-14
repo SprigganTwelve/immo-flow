@@ -4,92 +4,105 @@ title "Sequence Diagram: Retrieve Tenant(s)"
 skinparam actorStyle awesome
 actor UI
 
-participant "TenantDomain" as TenantDomain
-participant "AuthDomain" as AuthDoamin
-participant "AuthService" as Auth
-participant "EamilDomain"  as EmailDomain
-participant "EmailService" as Email
-participant "TenantRepository" as TenantRepo
-database "BDD" as BDD
+participant "TenantDomain"        as Domain
+participant "AuthDomain"          as AuthDomain
+participant "AuthService"         as AuthService
+participant "SecurityDomain"      as SecurityDomain
+participant "LogDomain"           as LogDomain
+participant "LogRepository"       as LogRepo
+participant "EmailDomain"         as EmailDomain
+participant "TenantRepository"    as TenantRepo
+database "Database"               as DB
 
 
 
+UI -> Domain : retrieveTenants(token)
+activate Domain
 
-UI -> TenantDomain : retrieveTenants()
-activate TenantDomain
+'====================
+' Authorization
+'====================
 
 
+Domain -> AuthDomain : authorize(token)
+activate AuthDomain
 
-TenantDomain -> AuthDoamin : checkAuthentication(token)
-activate AuthDoamin
 
-AuthDoamin -> Auth : validate (token)
-activate Auth
+AuthDomain -> AuthService : validate(token)
+activate AuthService
 
-note right of Auth
-  - check token
-  - check policy
-  - check permissions
-  - failed attempts < 4
+
+note right of AuthService
+  - validate token
+  - check signature
+  - decode claims
 end note
 
-Auth --> AuthDoamin: response
-deactivate Auth
+AuthService --> AuthDomain : authResult
+deactivate AuthService
 
 
 
-alt authenticated
+alt Authorized
+    AuthDomain --> Domain : authorized
+    deactivate AuthDomain
 
-    AuthDoamin --> TenantDomain : authenticated
-    deactivate AuthDoamin
-
-
-    TenantDomain -> TenantRepo : findAll / findOne()
+    '====================
+    ' Retrieve tenants
+    '====================
+    Domain -> TenantRepo : findAll() / findOne()
     activate TenantRepo
 
+    TenantRepo -> DB : SELECT tenant(s)
+    activate DB
+    DB --> TenantRepo : tenant(s)
+    deactivate DB
 
-    TenantRepo -> BDD : SELECT tenant(s)
-    activate BDD
-    BDD --> TenantRepo : tenant(s)
-    deactivate BDD
-
-
-    TenantRepo --> TenantDomain : tenant(s)
+    TenantRepo --> Domain : tenant(s)
     deactivate TenantRepo
 
+    Domain --> UI : tenants list
 
-    TenantDomain --> UI : tenants list
-    deactivate TenantDomain
+else Unauthorized
+    AuthDomain --> Domain : rejected
+    deactivate AuthDomain
 
+    '====================
+    ' Security handling
+    '====================
+    Domain -> SecurityDomain : handleAuthFailure(context)
+    activate SecurityDomain
 
-else authentication failed
+    SecurityDomain -> LogDomain : recordUnauthorizedAccess()
+    activate LogDomain
 
-    Auth --> TenantDomain : rejected
-    deactivate Auth
+    LogDomain -> LogRepo : save(event)
+    activate LogRepo
 
+    LogRepo -> DB : INSERT security_log
+    activate DB
+    DB --> LogRepo : ok
+    deactivate DB
 
-    TenantDomain -> TenantRepo : logFailure()
-    activate TenantRepo
-    TenantRepo -> BDD : INSERT security log
-    activate BDD
-    BDD --> TenantRepo : ok
-    deactivate BDD
+    LogRepo --> LogDomain : ok
+    deactivate LogRepo
 
-    TenantRepo --> TenantDomain: ok
-    deactivate TenantRepo
+    LogDomain --> SecurityDomain : recorded
+    deactivate LogDomain
 
-
-    TenantDomain -> EmailDomain : send warning email
+    '====================
+    ' Notification
+    '====================
+    SecurityDomain -> EmailDomain : sendWarningIfNeeded()
     ref over EmailDomain
-            Send warning email  to landlord
+        Send warning email to landlord
     end ref
-    EmailDomain --> TenantDomain: ok
 
+    EmailDomain --> SecurityDomain : sent
+    deactivate SecurityDomain
 
-    TenantDomain --> UI : warning / error
-    deactivate TenantDomain
-
+    Domain --> UI : <<warning>> unauthorized request
 end
 
-
+deactivate Domain
 @enduml
