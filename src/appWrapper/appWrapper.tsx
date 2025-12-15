@@ -8,7 +8,6 @@ import { useAppContext } from "@/contexts/AppContextProvider";
 import styles from './style.module.css'
 
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -65,6 +64,7 @@ const AppWrapper = <P,>({children} : AppWrapperProps<P>) => {
             }}
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+
           <div className={styles.layout}>
               <SideBar svgFill="white" />
               <main className={styles.main}>

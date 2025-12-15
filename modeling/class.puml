@@ -40,7 +40,7 @@ ILandlordRepository ..|> IManagedRepository
 
 
 
-interface IManagedRepository {
+interface "ICrudRepository" as IManagedRepository {
     + getAll(): void
     + getById(int id): void
     + deleteById(int id): void
@@ -154,8 +154,7 @@ class TenantGroup{
 
 
 interface ITenantGroupRepository{
-    + add(TenantGroup group): void
-    ' + dispatchBill(): void
+    + dispatchBill(): void
 }
 
 
@@ -217,7 +216,6 @@ Tenant "1..n"  *-down- "1..n" BankCard: > owns
 Bill .left.|> IDocumentToolkit:  > implement
 
 interface IBillRepository{
-    + add(Bill bill): void
     + getRemainingAmout(): void
 }
 

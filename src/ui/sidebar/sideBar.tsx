@@ -6,7 +6,7 @@ import { useAppContext } from "@/contexts/AppContextProvider";
 
 import Switch from '@/ui/switch/switch'
 
-import { LogoIconModel3 } from "@/components/icons/logos";
+import { LogoIconModel3 } from "@/icons/logos";
 import {
     Search4SvgrepoCom,
     PaymentEuroSvgrepoCom,
@@ -18,7 +18,7 @@ import {
     NightSvgrepoCom,
     RentSvgrepoCom,
     ChevronSmallRightSvgrepoCom
-} from "@/components/icons";
+} from "@/icons";
 
 
 import styles from "./style.module.css"

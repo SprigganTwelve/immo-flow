@@ -7,11 +7,12 @@ interface StatusBadgesProps{
     fontSize?: string;
     height?: string;
     children: React.ReactNode
+    cssStyleSheet?: React.CSSProperties
 }
 
 
-const StatusBadges: React.FC<StatusBadgesProps> = ({ children, gap, height, fontSize }) => {
-    return <div style={{ ['--space-between' as any]: gap ?? "0.5rem", height, fontSize }} className={styles.details}>{children}</div>;
+const StatusBadges: React.FC<StatusBadgesProps> = ({ children, gap, height, fontSize, cssStyleSheet }) => {
+    return <div style={{ ['--space-between' as any]: gap ?? "0.5rem", height, fontSize, ...cssStyleSheet }} className={styles.details}>{children}</div>;
 };
 
  

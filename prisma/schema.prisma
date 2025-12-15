@@ -1,0 +1,263 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+
+
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+
+model Person{
+  id                Int         @id                 @default(autoincrement())
+  lastName          String      @db.VarChar(100)
+  firstNamle        String      @db.VarChar(100)
+
+  email             String      @unique             @db.VarChar(255)
+  registeredAt      DateTime    @default(now())
+  updatedAt         DateTime
+  attachmentId      Int?         
+
+  bankCards         BankCard[]    //1-n
+
+  landlord          Landlord?
+  tenant            Tenant?
+  attachment        Attachment?            @relation(fields: [attachmentId], references: [id])
+
+  @@index([attachmentId])
+
+}
+
+
+
+enum AttachmentType {
+  ThreeDModel
+  Image
+  PDFDocument
+}
+
+
+
+
+model Attachment{
+  id              Int               @id
+  url             String
+
+  type            AttachmentType    @default(Image)
+
+  personId        Int               @unique
+  billId          Int               @unique
+
+  person          Person[]
+  bill            Bill ?
+  receipt         Receipt?
+  rent            Rent?
+
+  appartment      Appartment[]
+}
+
+
+
+
+model Landlord{
+  id          Int       @id      
+  person      Person    @relation(fields: [id], references: [id])
+}
+
+
+
+
+
+model Tenant {
+  id               Int             @id
+  rents            Rent[]        //1-n
+  bills            Bill[]
+  tenantBalance    TenantBalance[]
+  person           Person         @relation(fields: [id], references: [id]) 
+}
+
+
+
+
+
+model BankCard{
+  iban          Int               @id       @default(autoincrement())
+  bankName      String
+  cardNumber    String
+  
+  cardType      String
+  expiryDate    DateTime
+  userId        Int
+  currencyId    Int             @unique
+
+  user          Person          @relation(fields: [userId], references: [id])
+  currency      Currency        @relation(fields: [currencyId], references: [id])
+}
+
+
+
+
+model Currency {
+  id          Int      @id          @default(autoincrement())
+  code        String
+  numericCode Int
+
+  symbol      String   @db.Char(1)
+  name        String
+  minorUnit   Int
+
+  rentals     Settlement?
+  bankCard    BankCard[]
+}
+
+
+
+
+model Rent {
+  id              Int        @id @default(autoincrement())
+
+  type            RentType   @default(INDIVIDUAL)
+
+  start           DateTime
+  end             DateTime
+  receipts        Receipt[]
+
+  tenantId        Int
+  appartmentId    Int
+  attachmentId    Int         @unique
+
+
+  tenant          Tenant      @relation(fields: [tenantId], references: [id])
+  appartment      Appartment  @relation(fields: [appartmentId], references: [id])
+  attachment      Attachment  @relation(fields: [attachmentId], references: [id])
+
+  @@unique([tenantId, appartmentId])
+}
+
+
+
+
+enum RentType {
+  COLLECTIVE
+  INDIVIDUAL
+}
+
+
+
+
+model Receipt{
+  id              Int             @id    @default(autoincrement())
+  paid            Decimal
+  rentId          Int
+
+  billId          Int             @unique
+  attachmentId   Int              @unique
+
+  rents           Rent            @relation(fields: [rentId], references: [id])   
+  bill            Bill            @relation(fields: [billId], references: [id])
+  attachment     Attachment      @relation(fields: [attachmentId], references: [id])
+}
+
+
+
+
+model TenantBalance{
+  id              Int         @id    @default(autoincrement())
+  currentDebt     Decimal
+  tenant          Tenant      @relation(fields: [id], references: [id])
+}
+
+
+
+
+
+model Bill{
+  id            Int           @id   @default(autoincrement())
+  payout        Decimal
+  createdAt     DateTime
+  maturyDate    DateTime
+  receipts      Receipt[]         //0-n
+
+  tenantId      Int
+  attachmentId  Int           @unique
+  
+  attachment    Attachment    @relation(fields: [attachmentId], references: [id])
+  tenant        Tenant        @relation(fields: [tenantId], references: [id])
+  
+  @@index([attachmentId])
+}
+
+
+
+
+model Appartment{
+  id              Int         @id         @default(autoincrement())
+  name            String      
+  location        String
+  inRepair        Boolean
+  
+  rentals         Rent[]
+  settlement      Settlement[]
+  appointement    Appointment?
+
+  attachmentId    Int?
+  attachment      Attachment?   @relation(fields: [attachmentId], references: [id])
+}
+
+
+
+
+model Settlement {    //rental payout
+  id              Int         @id         @default(autoincrement())
+  payout          Decimal
+  appartmentId    Int
+  currencyId      Int         @unique
+
+
+  currency        Currency      @relation(fields: [currencyId], references: [id])
+  appartment      Appartment    @relation(fields: [appartmentId], references: [id])
+}
+
+
+
+
+model Appointment{
+    id            Int         @id            @default(autoincrement())
+    description   String
+    date          DateTime    @default(now())
+    scheduled     Boolean     @default(true)
+
+    appartmentid  Int         @unique
+    appartment    Appartment  @relation(fields: [appartmentid], references: [id])
+}
+
+
+
+
+model SecurityLog {
+  id              Int               @id @default(autoincrement())
+  label           String
+  origin          String
+  blacklistedHost BlacklistedHost[]
+}
+
+
+
+
+model BlacklistedHost {
+  id              Int           @id @default(autoincrement())
+  host            String
+  securityLogId   Int
+  securityLog     SecurityLog   @relation(fields: [securityLogId], references: [id])
+}
