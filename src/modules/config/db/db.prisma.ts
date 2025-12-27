@@ -13,7 +13,7 @@ if(global.prisma){
     prisma = global.prisma
 }
 else{
-    const connectionString = `${process.env.SUPABASE_TRANSACTION_URL}`
+    const connectionString = `${process.env.SUPABASE_POOLER_URL}`
     const adapter = new PrismaPg({ connectionString })
     prisma = new PrismaClient({ adapter });
 }
