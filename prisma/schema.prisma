@@ -166,7 +166,7 @@ model Receipt{
 
   rents           Rent            @relation(fields: [rentId], references: [id])   
   bill            Bill            @relation(fields: [billId], references: [id])
-  attachment     Attachment      @relation(fields: [attachmentId], references: [id])
+  attachment     Attachment       @relation(fields: [attachmentId], references: [id])
 }
 
 
