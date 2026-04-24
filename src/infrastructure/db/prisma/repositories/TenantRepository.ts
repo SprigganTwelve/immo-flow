@@ -1,8 +1,9 @@
 
+import { Tenant } from "@/domain/tenant/Tenant";
 import { PrismaClient } from "@/generated/prisma/client";
 
 
-class TenantRepository implements ITenantRepository {
+class TenantRepository  {
 
     async add(input: Tenant): Promise<string> {
     }

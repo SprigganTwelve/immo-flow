@@ -1,4 +1,4 @@
-import { Tenant } from "../models/Tenant";
+import { Tenant } from "../tenant/Tenant";
 
 
 interface ITenantRepository extends ICrudRepository<Tenant, Tenant>{}
